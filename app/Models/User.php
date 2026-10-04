@@ -2,31 +2,30 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $guarded = ['id']; // Membuka akses mass assignment selain ID
+
+    // Relasi: Satu mitra memiliki banyak listing limbah di Showcase
+    public function limbahs()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->hasMany(Limbah::class, 'mitra_id');
+    }
+
+    // Relasi: Satu mitra memiliki banyak laporan private
+    public function laporanLimbahs()
+    {
+        return $this->hasMany(LaporanLimbah::class, 'mitra_id');
+    }
+
+    // Helper function untuk cek role dengan mudah nanti
+    public function hasRole($role)
+    {
+        return $this->role === $role;
     }
 }
