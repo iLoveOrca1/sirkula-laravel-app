@@ -1,9 +1,18 @@
 @import 'tailwindcss';
 
+/* Path sumber tambahan untuk komponen bawaan Laravel */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@source '../../resources/**/*.blade.php'; /* Memastikan semua file blade kita terbaca */
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Font bawaan UI Anda */
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    
+    /* --- CUSTOM WARNA SIRKULA --- */
+    /* Warna ini diambil berdasarkan nuansa desain Figma Anda */
+    --color-sirkula-green: #143b25;      /* Hijau gelap utama (untuk header/tombol) */
+    --color-sirkula-green-hover: #1b4d32;/* Hijau sedikit lebih terang (untuk hover) */
+    --color-sirkula-light: #f4f7f6;      /* Warna background terang yang lembut */
+    --color-sirkula-text: #2d3748;       /* Warna teks utama */
 }

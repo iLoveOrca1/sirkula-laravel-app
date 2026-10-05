@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kategori_limbahs', function (Blueprint $table) {
+        Schema::create('kategori_limbah', function (Blueprint $table) {
             $table->id();
+            $table->string('nama_kategori');
+            $table->string('slug')->unique();
+            $table->string('badge_color')->nullable(); // cth: 'bg-green-100 text-green-800'
             $table->timestamps();
         });
     }

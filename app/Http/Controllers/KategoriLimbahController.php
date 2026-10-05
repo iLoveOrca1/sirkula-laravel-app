@@ -8,58 +8,67 @@ use Illuminate\Http\Request;
 class KategoriLimbahController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar kategori limbah.
      */
     public function index()
     {
-        //
+        $kategori = KategoriLimbah::all();
+        return view('kategori.index', compact('kategori'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan form untuk membuat kategori baru.
      */
     public function create()
     {
-        //
+        return view('kategori.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menyimpan kategori baru ke database.
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nama_kategori' => 'required|string|max:255|unique:kategori_limbah',
+            'deskripsi' => 'nullable|string',
+        ]);
+
+        KategoriLimbah::create($validated);
+
+        return redirect()->route('kategori.index')->with('success', 'Kategori limbah berhasil ditambahkan.');
     }
 
     /**
-     * Display the specified resource.
+     * Menampilkan form untuk mengedit kategori.
      */
-    public function show(KategoriLimbah $kategoriLimbah)
+    public function edit(KategoriLimbah $kategori)
     {
-        //
+        return view('kategori.edit', compact('kategori'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Memperbarui data kategori di database.
      */
-    public function edit(KategoriLimbah $kategoriLimbah)
+    public function update(Request $request, KategoriLimbah $kategori)
     {
-        //
+        $validated = $request->validate([
+            'nama_kategori' => 'required|string|max:255|unique:kategori_limbah,nama_kategori,' . $kategori->id,
+            'deskripsi' => 'nullable|string',
+        ]);
+
+        $kategori->update($validated);
+
+        return redirect()->route('kategori.index')->with('success', 'Kategori limbah berhasil diperbarui.');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Menghapus kategori dari database.
      */
-    public function update(Request $request, KategoriLimbah $kategoriLimbah)
+    public function destroy(KategoriLimbah $kategori)
     {
-        //
-    }
+        $kategori->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(KategoriLimbah $kategoriLimbah)
-    {
-        //
+        return redirect()->route('kategori.index')->with('success', 'Kategori limbah berhasil dihapus.');
     }
 }

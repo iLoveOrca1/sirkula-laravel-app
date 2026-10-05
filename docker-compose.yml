@@ -1,22 +1,54 @@
 services:
-  db:
-    image: postgres:16-alpine
-    container_name: sirkula-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${DB_DATABASE:-sirkula}
-      POSTGRES_USER: ${DB_USERNAME:-sirkula}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
-    ports:
-      - "${DB_PORT:-5432}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-sirkula} -d ${DB_DATABASE:-sirkula}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    # db:
+    #     image: 'postgres:16-alpine'
+    #     container_name: sirkula-postgres
+    #     restart: unless-stopped
+    #     environment:
+    #         POSTGRES_DB: '${DB_DATABASE:-sirkula}'
+    #         POSTGRES_USER: '${DB_USERNAME:-sirkula}'
+    #         POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+    #     ports:
+    #         - '${DB_PORT:-5432}:5432'
+    #     volumes:
+    #         - 'postgres_data:/var/lib/postgresql/data'
+    #     healthcheck:
+    #         test:
+    #             - CMD-SHELL
+    #             - 'pg_isready -U ${DB_USERNAME:-sirkula} -d ${DB_DATABASE:-sirkula}'
+    #         interval: 5s
+    #         timeout: 5s
+    #         retries: 5
+    pgsql:
+        image: 'postgres:16-alpine'
+        ports:
+            - '${FORWARD_DB_PORT:-5432}:5432'
+        environment:
+            PGPASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+        volumes:
+            - 'sail-pgsql:/var/lib/postgresql/data'
+            - './vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
+        networks:
+            - sail
+        healthcheck:
+            test:
+                - CMD
+                - pg_isready
+                - '-q'
+                - '-d'
+                - '${DB_DATABASE}'
+                - '-U'
+                - '${DB_USERNAME}'
+            retries: 3
+            timeout: 5s
+
+# Jaringan (networks) dan volumes didefinisikan di level terluar (paling kiri/bawah)
+networks:
+    sail:
+        driver: bridge
 
 volumes:
-  postgres_data:
-    driver: local
+    sail-pgsql:
+        driver: local
