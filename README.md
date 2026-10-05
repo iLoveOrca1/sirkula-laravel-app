@@ -59,27 +59,53 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ## Quick Setup
 
+### Jalankan docker
+
 ```
+sudo docker compose -f "docker-compose.yml" up -d --build
+```
+
+### Jalankan laravel
+
+```
+# install pgsql extension
+sudo apt install php-pgsql
+
+# Download package laravel
 composer install
 ```
 
-Downloading composer package
-
 ```
+# Installing the frontend asset
 npm ci
 ```
 
-Installing the frontend asset
-
 ```
+# Creating .env example
 cp .env.example .env
-
 ```
 
-Creating .env example
-
 ```
+# Generate app key
 php artisan key:generate
+# Create storage symlink
 php artisan storage:link
 php artisan migrate
+```
+
+```
+# Migrate ke pgsql
+php artisan migrate
+
+# Menjalankan DatabaseSeeder utama
+php artisan db:seed
+
+# Reset ulang database dari awal sekaligus menjalankan seeder
+php artisan migrate:fresh --seed
+
+```
+
+```
+# Jalankan laravel
+composer run dev
 ```
