@@ -1,5 +1,5 @@
-<footer class="border-t border-emerald-900/10 bg-[##F0F5F0]">
-    <div class="mx-auto max-w-6xl px-6 py-14 lg:py-16">
+<footer class="bg-[##F0F5F0]">
+    <div class="mx-auto max-w-7xl px-6 py-14 lg:py-16">
 
         {{-- Bagian atas: brand, navigasi, pemberitahuan --}}
         <div class="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-8">
@@ -7,11 +7,8 @@
             {{-- Brand --}}
             <div class="md:col-span-5">
                 <a href="{{ url('/') }}" class="inline-flex items-center gap-2" aria-label="SIRKULA - Beranda">
-                    <span class="relative inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-900 text-white">
-                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M17 7c-1.5-2-4-3-6.5-2.5S6.5 8 8 10s6 2 7.5 4-.5 4.5-3 5-5-.5-6.5-2.5" />
-                        </svg>
+                    <span class="relative inline-flex h-8 w-8 justify-center">
+                        <img src="{{ asset('logo.png') }}" alt="sirkula-logo">
                     </span>
                     <span class="relative text-xl font-bold tracking-tight text-emerald-950">
                         SIRKULA
@@ -19,10 +16,10 @@
                     </span>
                 </a>
 
-                <p class="mt-3 text-sm font-semibold text-emerald-900">
+                <p class="text-sm font-semibold text-emerald-900">
                     Temukan. Hubungkan. Sirkulasikan.
                 </p>
-                <p class="mt-2 max-w-sm text-xs leading-relaxed text-gray-500">
+                <p class="mt-3 max-w-sm text-xs leading-relaxed text-gray-500">
                     Infrastruktur pertukaran dan koneksi informasi limbah sirkular untuk mitra industri,
                     perhotelan, komersial, dan pengolah lokal.
                 </p>
