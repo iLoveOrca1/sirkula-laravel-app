@@ -8,23 +8,20 @@
     <title>{{ config('app.name', 'About') }}</title>
 
     @fonts
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
-    <!-- Styles / Scripts -->
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
-        <style>
-            /*! tailwindcss v4.0.7 | MIT License | https://tailwindcss.com */
-        </style>
-    @endif
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="">
-    <x-layouts.navbar.guest></x-layouts.navbar.guest>
+<body class="bg-background text-text font-sans antialiased">
+    <x-layouts.navbar.guest/>
 
     {{ $slot }}
 
-    <x-layouts.footer></x-layouts.footer>
+    <x-layouts.footer />
 </body>
 
 </html>

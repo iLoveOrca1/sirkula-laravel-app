@@ -5,12 +5,16 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --color-primary-100: #24513A;
+    --color-primary-100: #C6ECCD;
+    --color-primary-300: #24513A;
     --color-primary-500: #093A25;
 
-    --color-surface: #F6FBF5;
+    --color-text: #414943;
 
-    --color-surface-100: #F0F5F0;
+    --color-surface: #F0F5F0;
+
+    --color-foreground: #EBEFEA;
+    --color-background: #F6FBF5;
 
     --font-sans: 'IBM Plex Mono', ui-monospace, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;

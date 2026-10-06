@@ -1,4 +1,4 @@
-<footer class="bg-surface-100">
+<footer class="bg-surface mt-auto">
     <div class="mx-auto max-w-7xl px-6 py-14 lg:py-16">
 
         {{-- Bagian atas: brand, navigasi, pemberitahuan --}}
@@ -12,7 +12,7 @@
                     </span>
                     <span class="relative text-xl font-bold tracking-tight text-emerald-950">
                         SIRKULA
-                        <span class="absolute -right-2 top-0.5 h-1.5 w-1.5 rounded-full bg-red-500"></span>
+                        <span class="absolute-right-2 top-0.5 h-1.5 w-1.5 rounded-full bg-red-500"></span>
                     </span>
                 </a>
 

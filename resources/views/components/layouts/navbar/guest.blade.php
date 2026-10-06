@@ -1,4 +1,4 @@
-<header class="relative bg-header">
+<header class="bg-surface sticky top-0 shadow-sm z-50">
     <div class="mx-auto flex h-20 max-w-7xl px-6 items-center justify-between gap-6">
 
         {{-- Kiri: logo + menu --}}
@@ -13,13 +13,13 @@
         </div>
 
         {{-- Kanan: aksi (desktop) --}}
-        <div class="hidden items-center gap-6 md:flex">
+        <div class="hidden items-center gap-6 md:flex inset-x-0">
             <a href="{{ url('/login') }}"
                class="text-sm font-medium text-ink transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
                 Masuk
             </a>
             <a href="{{ url('/register') }}"
-               class="rounded-xl bg-primary-100 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+               class="rounded-xl bg-primary-500 hover:bg-primary-300 px-4 py-2 text-sm font-medium text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
                 Daftar menjadi Mitra
             </a>
         </div>
@@ -36,7 +36,7 @@
                 </svg>
             </summary>
 
-            <div class="absolute inset-x-0 top-full border-b border-primary/10 bg-header px-6 pb-5 pt-2 shadow-lg">
+            <div class="absolute inset-x-0 top-full bg-surface px-6 pb-5 pt-2 shadow-lg  z-100">
                 <x-layouts.navbar.links vertical />
 
                 <div class="mt-4 flex flex-col gap-2 border-t border-primary/10 pt-4">
@@ -45,7 +45,7 @@
                         Masuk
                     </a>
                     <a href="{{ url('/register') }}"
-                       class="rounded-lg bg-primary px-4 py-2.5 text-center text-sm font-medium text-white hover:bg-primary-hover">
+                       class="rounded-lg bg-primary-500 px-4 py-2.5 text-center text-sm font-medium text-white">
                         Daftar menjadi Mitra
                     </a>
                 </div>
