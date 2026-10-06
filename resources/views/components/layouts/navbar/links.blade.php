@@ -4,7 +4,7 @@
     $links = [
         ['label' => 'Beranda',         'href' => url('/'),          'active' => request()->is('/')],
         ['label' => 'Jelajahi Limbah', 'href' => url('/limbah'),    'active' => request()->is('limbah*')],
-        ['label' => 'Tentang',         'href' => url('/tentang'),   'active' => request()->is('tentang*')],
+        ['label' => 'Tentang',         'href' => url('/about'),     'active' => request()->is('about*')],
         ['label' => 'Dashboard',       'href' => url('/dashboard'), 'active' => request()->is('dashboard*')],
     ];
 @endphp
@@ -22,7 +22,7 @@
                    'transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary',
                    'block rounded-md px-3 py-2 hover:bg-primary/5' => $vertical,
                    'font-semibold text-primary' => $link['active'],
-                   'text-ink' => ! $link['active'],
+                   'text-ink text-bold' => ! $link['active'],
                ])>
                 {{ $link['label'] }}
             </a>

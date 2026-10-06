@@ -1,10 +1,10 @@
-<header class="relative border-b border-primary/10 bg-header">
-    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-6">
+<header class="relative bg-header">
+    <div class="mx-auto flex h-20 max-w-7xl px-6 items-center justify-between gap-6">
 
         {{-- Kiri: logo + menu --}}
         <div class="flex items-center gap-10">
             <a href="{{ url('/') }}" class="flex items-center gap-2" aria-label="Sirkula, ke beranda">
-                <img src="{{ asset('images/logo.svg') }}" alt="" class="h-8 w-8">
+                <img src="{{ asset('logo.png') }}" alt="" class="h-8 w-8">
                 <span class="text-xl font-semibold tracking-wide text-primary">SIRKULA</span>
                 <span class="mt-[-10px] h-2 w-2 rounded-full bg-accent" aria-hidden="true"></span>
             </a>
@@ -19,7 +19,7 @@
                 Masuk
             </a>
             <a href="{{ url('/register') }}"
-               class="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+               class="rounded-xl bg-[#24513A] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
                 Daftar menjadi Mitra
             </a>
         </div>
