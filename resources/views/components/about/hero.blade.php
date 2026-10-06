@@ -9,7 +9,7 @@
     ],
 ])
 
-<section {{ $attributes->class('bg-[#F6FBF5]') }}>
+<section {{ $attributes->class('bg-surface') }}>
     <div class="mx-auto max-w-7xl px-6 pb-14 pt-16 md:pb-20 md:pt-24">
 
         {{-- Badge --}}
@@ -20,7 +20,7 @@
         </span>
 
         {{-- Judul --}}
-        <h1 class="mt-5 max-w-4xl text-3xl font-bold leading-tight tracking-tight text-[#093A25]
+        <h1 class="mt-5 max-w-4xl text-3xl font-bold leading-tight tracking-tight text-primary-500
                 sm:text-4xl md:text-5xl md:leading-[1.1]">
             {{ $title }}
         </h1>

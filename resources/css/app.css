@@ -5,7 +5,12 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --color-titlegreen-500: #093A25,
+    --color-primary-100: #24513A;
+    --color-primary-500: #093A25;
+
+    --color-surface: #F6FBF5;
+
+    --color-surface-100: #F0F5F0;
 
     --font-sans: 'IBM Plex Mono', ui-monospace, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;

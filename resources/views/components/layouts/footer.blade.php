@@ -1,4 +1,4 @@
-<footer class="bg-[##F0F5F0]">
+<footer class="bg-surface-100">
     <div class="mx-auto max-w-7xl px-6 py-14 lg:py-16">
 
         {{-- Bagian atas: brand, navigasi, pemberitahuan --}}
