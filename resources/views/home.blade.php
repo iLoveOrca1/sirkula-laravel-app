@@ -1,7 +1,10 @@
 <x-layout>
     <main>
         <x-home.hero/> 
-        <x-home.category />
-        <x-home.cara-kerja />
+        <x-home.category/>
+        <x-home.how-it-works/>
+        <x-home.explore/>
+        <x-home.zone/>
+        <x-home.banner/>
     </main>
 </x-layout>

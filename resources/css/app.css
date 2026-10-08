@@ -11,14 +11,23 @@
     
     --font-mono: 'IBM Plex Mono', monospace;
 
+    /* Primary */
     --color-primary-100: #C6ECCD;
     --color-primary-300: #24513A;
     --color-primary-500: #093A25;
 
+    /* Danger */
+    --color-danger-bright: #FEE2E2;
+    --color-danger-dark: #B42318;
+
+    /* Warning */
+    --color-warning-bright: #FEF3C7;
+    --color-warning-dark: #B54708;
+
+    
+    /* Neutral */
     --color-text: #414943;
-
     --color-surface: #F0F5F0;
-
     --color-foreground: #EBEFEA;
     --color-background: #F6FBF5;
 
