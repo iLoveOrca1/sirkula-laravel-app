@@ -1,10 +1,16 @@
 @import 'tailwindcss';
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
 @theme {
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --font-jakarta: 'Plus Jakarta Sans', sans-serif;
+    
+    --font-mono: 'IBM Plex Mono', monospace;
+
     --color-primary-100: #C6ECCD;
     --color-primary-300: #24513A;
     --color-primary-500: #093A25;
@@ -16,7 +22,7 @@
     --color-foreground: #EBEFEA;
     --color-background: #F6FBF5;
 
-    --font-sans: 'IBM Plex Mono', ui-monospace, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-    --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    /* --font-sans: 'IBM Plex Mono', ui-monospace, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; */
 
 }

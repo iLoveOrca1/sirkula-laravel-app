@@ -205,7 +205,8 @@
             {{-- Image + floating card --}}
             <div class="relative">
                 <div class="bg-foreground rounded-2xl aspect-[4/3] w-full overflow-hidden">
-                    <img src="{{ asset('images/kemitraan-lapangan.jpg') }}" alt="Praktik Lapangan"
+                    <img src="{{ asset('img/jamal.png') }}" alt="Praktik Lapangan"
+                    {{-- <img src="/img/jamal.png" alt="Praktik Lapangan" --}}
                          class="w-full h-full object-cover" onerror="this.style.display='none'">
                 </div>
                 <div class="absolute -bottom-6 left-6 md:left-10 bg-white rounded-xl shadow-lg px-5 py-4 max-w-xs flex items-start gap-3">
