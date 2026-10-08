@@ -62,7 +62,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 ### Jalankan docker
 
 ```
-sudo docker compose -f "docker-compose.yml" up -d --build
+sudo docker compose -f "docker/docker-compose.yml" up -d --build
 ```
 
 ### Jalankan laravel

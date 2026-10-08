@@ -10,7 +10,7 @@
 ])
 
 <section {{ $attributes->class('bg-background') }}>
-    <div class="mx-auto h-fit max-w-7xl px-6 pb-14 pt-16 md:pb-20 md:pt-24">
+    <div class="mx-auto h-screen max-w-7xl px-6 pb-14 pt-16 md:pb-20 md:pt-24">
 
         {{-- Pil --}}
         <span class="inline-flex items-center gap-1.5 rounded-full bg-primary-100 px-3 py-1
