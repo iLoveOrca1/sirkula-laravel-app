@@ -1,4 +1,3 @@
-```php
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -18,8 +17,9 @@ use App\Models\LaporanLimbah;
 // ==========================================
 
 Route::get('/', function () {
+    // Menggunakan whereIn untuk menangkap status 'tersedia' maupun 'Tersedia' dari database
     $limbahMap = LaporanLimbah::with(['mitra', 'kategori'])
-        ->where('status', 'tersedia')
+        ->whereIn('status', ['tersedia', 'Tersedia'])
         ->latest()
         ->get();
 
@@ -99,16 +99,18 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:mitra'])->group(function () {
 
     // Dashboard laporan milik mitra yang login
-    Route::get('/laporan-limbah', function () {
-        $user = Auth::user();
+    // Mendukung pengurutan: /laporan-limbah?sort=tanggal&dir=desc
+    Route::get('/laporan-limbah', [DashboardController::class, 'mitra'])
+        ->name('laporan.index');
 
-        $laporan = LaporanLimbah::with('kategori')
-            ->where('mitra_id', $user->id)
-            ->latest()
-            ->get();
+    // Ekspor rekap laporan milik mitra (CSV)
+    Route::get('/laporan-limbah/export', [DashboardController::class, 'exportMitra'])
+        ->name('laporan.export');
 
-        return view('dashboard', compact('user', 'laporan'));
-    })->name('laporan.index');
+    // Mengubah status ketersediaan (Tersedia / Sedang Diproses / Sudah Diambil)
+    Route::patch('/laporan/{id}/ubah-status', [DashboardController::class, 'ubahStatus'])
+        ->whereNumber('id')
+        ->name('laporan.ubahStatus');
 
     // Membuat laporan
     Route::get('/laporan/buat', [LaporanLimbahController::class, 'create'])

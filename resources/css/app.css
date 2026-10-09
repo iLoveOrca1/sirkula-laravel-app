@@ -4,34 +4,25 @@
 /* Path sumber tambahan untuk komponen bawaan Laravel */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
-@source '../../resources/**/*.blade.php'; /* Memastikan semua file blade kita terbaca */
+@source '../../resources/**/*.blade.php';
 
 @theme {
-<<<<<<< HEAD
-    /* Font bawaan UI Anda */
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-    
     /* --- CUSTOM WARNA SIRKULA --- */
-    /* Warna ini diambil berdasarkan nuansa desain Figma Anda */
-    --color-sirkula-green: #143b25;      /* Hijau gelap utama (untuk header/tombol) */
-    --color-sirkula-green-hover: #1b4d32;/* Hijau sedikit lebih terang (untuk hover) */
-    --color-sirkula-light: #f4f7f6;      /* Warna background terang yang lembut */
-    --color-sirkula-text: #2d3748;       /* Warna teks utama */
-}
-=======
+    --color-sirkula-green: #143b25;
+    --color-sirkula-green-hover: #1b4d32;
+    --color-sirkula-light: #f4f7f6;
+    --color-sirkula-text: #2d3748;
+
     --color-primary-100: #C6ECCD;
     --color-primary-300: #24513A;
     --color-primary-500: #093A25;
 
     --color-text: #414943;
-
     --color-surface: #F0F5F0;
-
     --color-foreground: #EBEFEA;
     --color-background: #F6FBF5;
 
-    --font-sans: 'IBM Plex Mono', ui-monospace, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Font Konfigurasi */
+    --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-
 }
->>>>>>> 7f142a2d8cc6d5b642807762c6b2134aeafcd94a
