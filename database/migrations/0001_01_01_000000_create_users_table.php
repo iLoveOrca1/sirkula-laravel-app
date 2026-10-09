@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('no_whatsapp')->nullable();
             $table->string('nama_instansi')->nullable();
             $table->text('alamat_lengkap')->nullable();
+            $table->string('kelurahan')->nullable(); // Ditambahkan untuk menampung data kelurahan sesuai diskusi
+            $table->string('kode_pos')->nullable(); // Ditambahkan untuk menampung kode pos
             $table->decimal('latitude', 10, 8)->nullable();
             $table->decimal('longitude', 11, 8)->nullable();
             $table->boolean('is_verified')->default(false);
@@ -36,7 +38,7 @@ return new class extends Migration
             $table->timestamp('created_at')->nullable();
         });
 
-        // 3. Tabel Sessions (Bawaan Laravel - INI YANG HILANG SEBELUMNYA)
+        // 3. Tabel Sessions (Bawaan Laravel)
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->foreignId('user_id')->nullable()->index();

@@ -2,22 +2,46 @@
 
 namespace App\Models;
 
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasFactory, Notifiable;
 
-    protected $guarded = ['id']; // Membuka akses mass assignment selain ID
+    /**
+     * Kolom yang diizinkan untuk diisi secara massal (Mass Assignment).
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role', // <-- Sangat aman ditambahkan di sini
+    ];
 
-    // Relasi: Satu mitra memiliki banyak listing limbah di Showcase
-    public function limbahs()
+    /**
+     * Kolom yang akan disembunyikan saat data User diubah menjadi Array/JSON.
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Konversi tipe data otomatis (Casting).
+     */
+    protected function casts(): array
     {
-        return $this->hasMany(Limbah::class, 'mitra_id');
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
     }
 
-    // Relasi: Satu mitra memiliki banyak laporan private
+    // Relasi: Satu mitra memiliki banyak laporan limbah
+    // (Fungsi limbahs() yang error sudah dihapus, cukup gunakan ini saja)
     public function laporanLimbahs()
     {
         return $this->hasMany(LaporanLimbah::class, 'mitra_id');

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -24,10 +26,9 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             
-            // Nanti di sini kita bisa tambahkan logika redirect berdasarkan Role
-            // if(Auth::user()->role == 'admin') return redirect('/dashboard-admin');
-            
-            return redirect()->intended('/');
+            // PERBAIKAN: Semua user yang berhasil login langsung diarahkan ke terminal /dashboard
+            // Nanti file routes/web.php yang akan memilah mereka ke halaman masing-masing
+            return redirect()->intended('/dashboard');
         }
 
         return back()->withErrors([
@@ -54,22 +55,25 @@ class AuthController extends Controller
     // Memproses data pendaftaran
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:mitra,pembeli' // Hanya boleh mendaftar sebagai mitra atau pembeli
+            // Hanya izinkan pendaftaran mandiri untuk mitra dan pembeli (Admin & Petugas dibuat manual/seeder)
+            'role' => 'required|in:mitra,pembeli' 
         ]);
 
-        // Enkripsi password sebelum disimpan
-        $validated['password'] = bcrypt($validated['password']);
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password), 
+            'role' => $request->role,
+        ]);
 
-        // Buat user baru
-        $user = \App\Models\User::create($validated);
-
-        // Langsung login-kan setelah mendaftar
+        // Login otomatis
         Auth::login($user);
 
-        return redirect('/')->with('success', 'Pendaftaran berhasil!');
+        // PERBAIKAN: Arahkan pengguna baru ke terminal /dashboard
+        return redirect('/dashboard')->with('success', 'Pendaftaran berhasil! Selamat datang di Sirkula.');
     }
 }

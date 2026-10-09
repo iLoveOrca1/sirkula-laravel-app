@@ -11,15 +11,31 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('laporan_limbah', function (Blueprint $table) {
+        Schema::create('laporan_limbahs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('mitra_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('kategori_id')->constrained('kategori_limbah')->onDelete('cascade');
+
+            // Relasi ke tabel kategori dengan nama plural (kategori_limbahs)
+            $table->foreignId('kategori_id')->constrained('kategori_limbahs')->onDelete('cascade');
+
+            $table->string('judul');
+            $table->text('deskripsi');
+            $table->decimal('estimasi_volume', 10, 2);
+            $table->enum('satuan', ['kg', 'ton', 'liter', 'pcs']);
             $table->date('tanggal_pencatatan');
-            $table->decimal('volume_dihasilkan', 10, 2);
-            $table->string('satuan');
-            $table->string('pihak_pengambil')->nullable();
-            $table->text('catatan_internal')->nullable();
+
+            // Alur status (huruf kecil semua):
+            // menunggu -> tersedia -> sedang dijemput -> selesai   (atau: menunggu -> ditolak)
+            $table->enum('status', ['menunggu', 'tersedia', 'ditolak', 'sedang dijemput', 'selesai'])
+                ->default('menunggu');
+
+            // Kolom foto_limbah untuk foto material
+            $table->string('foto_limbah')->nullable();
+
+            // Kolom koordinat lokasi peta
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
+
             $table->timestamps();
         });
     }
@@ -29,7 +45,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // PERBAIKAN: Nama tabel sekarang sudah sama persis dengan fungsi up()
-        Schema::dropIfExists('laporan_limbah');
+        Schema::dropIfExists('laporan_limbahs');
     }
 };

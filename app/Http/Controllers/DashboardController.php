@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Limbah;
+use App\Models\LaporanLimbah; // <-- Ubah dari Limbah menjadi LaporanLimbah
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -10,8 +10,8 @@ class DashboardController extends Controller
 {
     public function admin()
     {
-        // Ambil semua laporan beserta relasi kategori dan siapa pembuatnya (mitra)
-        $semuaLaporan = Limbah::with(['kategori', 'mitra'])->latest()->get();
+        // Ambil semua laporan beserta relasi kategori dan mitra
+        $semuaLaporan = LaporanLimbah::with(['kategori', 'mitra'])->latest()->get();
         
         $user = Auth::user();
 

@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Limbah;
 use App\Models\KategoriLimbah;
-use App\Models\LaporanLimbah; // <-- Tambahkan baris import ini!
+use App\Models\LaporanLimbah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class LimbahController extends Controller
 {
-    // ... sisa kode di bawahnya tetap sama
     /**
      * Menampilkan daftar semua limbah.
      */
     public function index()
     {
-        // Mengambil data limbah beserta relasi mitra dan kategori
-        $limbah = Limbah::with(['mitra', 'kategori'])->latest()->get();
+        // Mengambil data laporan limbah beserta relasi mitra dan kategori
+        $limbah = LaporanLimbah::with(['mitra', 'kategori'])->latest()->get();
         return view('limbah.index', compact('limbah'));
     }
 
@@ -35,20 +34,20 @@ class LimbahController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validasi input, pastikan tanggal_pencatatan wajib diisi
+        // 1. Validasi input, perbaiki referensi tabel menjadi kategori_limbahs
         $validated = $request->validate([
-            'kategori_id' => 'required|exists:kategori_limbah,id',
+            'kategori_id' => 'required|exists:kategori_limbahs,id',
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'estimasi_volume' => 'required|numeric',
             'satuan' => 'required|in:kg,ton,liter,pcs',
-            'tanggal_pencatatan' => 'required|date', // Wajib ada
+            'tanggal_pencatatan' => 'required|date',
         ]);
 
         // 2. Masukkan data tambahan ke dalam array
         $validated['mitra_id'] = Auth::id();
         $validated['status'] = 'menunggu';
-        $validated['tanggal_pencatatan'] = $request->tanggal_pencatatan; // Pastikan ini terpanggil
+        $validated['tanggal_pencatatan'] = $request->tanggal_pencatatan;
 
         // 3. Simpan ke database
         LaporanLimbah::create($validated);
@@ -59,7 +58,7 @@ class LimbahController extends Controller
     /**
      * Menampilkan detail spesifik limbah.
      */
-    public function show(Limbah $limbah)
+    public function show(LaporanLimbah $limbah)
     {
         return view('limbah.show', compact('limbah'));
     }
@@ -67,7 +66,7 @@ class LimbahController extends Controller
     /**
      * Menampilkan form untuk mengedit data limbah.
      */
-    public function edit(Limbah $limbah)
+    public function edit(LaporanLimbah $limbah)
     {
         $kategori = KategoriLimbah::all();
         return view('limbah.edit', compact('limbah', 'kategori'));
@@ -76,10 +75,10 @@ class LimbahController extends Controller
     /**
      * Memperbarui data limbah di database.
      */
-    public function update(Request $request, Limbah $limbah)
+    public function update(Request $request, LaporanLimbah $limbah)
     {
         $validated = $request->validate([
-            'kategori_id' => 'required|exists:kategori_limbah,id',
+            'kategori_id' => 'required|exists:kategori_limbahs,id',
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'estimasi_volume' => 'required|numeric',
@@ -94,7 +93,7 @@ class LimbahController extends Controller
     /**
      * Menghapus data limbah dari database.
      */
-    public function destroy(Limbah $limbah)
+    public function destroy(LaporanLimbah $limbah)
     {
         $limbah->delete();
 

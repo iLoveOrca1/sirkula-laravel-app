@@ -9,11 +9,16 @@ class KategoriLimbah extends Model
 {
     use HasFactory;
 
-    protected $table = 'kategori_limbah'; // Memaksa nama tabel agar tidak jadi kategori_limbahs
-    protected $guarded = ['id'];
+    // Tentukan nama tabel secara eksplisit agar terbaca plural
+    protected $table = 'kategori_limbahs';
 
-    public function limbahs()
+    protected $fillable = [
+        'nama_kategori',
+        'deskripsi',
+    ];
+
+    public function laporanLimbahs()
     {
-        return $this->hasMany(Limbah::class, 'kategori_id');
+        return $this->hasMany(LaporanLimbah::class, 'kategori_id');
     }
 }
