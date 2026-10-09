@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap');
 
 /* Path sumber tambahan untuk komponen bawaan Laravel */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -6,6 +7,7 @@
 @source '../../resources/**/*.blade.php'; /* Memastikan semua file blade kita terbaca */
 
 @theme {
+<<<<<<< HEAD
     /* Font bawaan UI Anda */
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     
@@ -16,3 +18,20 @@
     --color-sirkula-light: #f4f7f6;      /* Warna background terang yang lembut */
     --color-sirkula-text: #2d3748;       /* Warna teks utama */
 }
+=======
+    --color-primary-100: #C6ECCD;
+    --color-primary-300: #24513A;
+    --color-primary-500: #093A25;
+
+    --color-text: #414943;
+
+    --color-surface: #F0F5F0;
+
+    --color-foreground: #EBEFEA;
+    --color-background: #F6FBF5;
+
+    --font-sans: 'IBM Plex Mono', ui-monospace, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+}
+>>>>>>> 7f142a2d8cc6d5b642807762c6b2134aeafcd94a

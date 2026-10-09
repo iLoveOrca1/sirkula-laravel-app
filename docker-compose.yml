@@ -1,4 +1,5 @@
 services:
+<<<<<<< HEAD
     # db:
     #     image: 'postgres:16-alpine'
     #     container_name: sirkula-postgres
@@ -48,6 +49,32 @@ services:
 networks:
     sail:
         driver: bridge
+=======
+  db:
+    image: postgres:16-alpine
+    container_name: sirkula-postgres
+    restart: no
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-sirkula}
+      POSTGRES_USER: ${DB_USERNAME:-sirkula}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-sirkula} -d ${DB_DATABASE:-sirkula}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: no
+    ports:
+      - 8080:8080
+>>>>>>> 7f142a2d8cc6d5b642807762c6b2134aeafcd94a
 
 volumes:
     sail-pgsql:
