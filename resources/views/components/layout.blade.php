@@ -18,9 +18,7 @@
 
 <body class="bg-background text-text font-sans antialiased">
     <x-layouts.navbar.guest/>
-
-    {{ $slot }}
-
+        {{ $slot }}
     <x-layouts.footer />
 </body>
 
