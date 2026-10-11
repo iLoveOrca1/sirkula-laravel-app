@@ -9,7 +9,7 @@ use App\Http\Controllers\LaporanLimbahController;
 use App\Http\Controllers\PasarController;
 use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\PermintaanMaterialController;
 use App\Models\LaporanLimbah;
 
 // ==========================================
@@ -39,6 +39,16 @@ Route::get('/pasar/{id}', [PasarController::class, 'show'])
     ->whereNumber('id')
     ->name('pasar.show');
 
+// Pelajari Lebih Lanjut
+Route::get('/pelajari-lebih-lanjut', function () {
+    return view('pelajari'); // merujuk ke file resources/views/pelajari.blade.php
+})->name('pelajari');
+
+// Halaman Bantuan
+Route::get('/bantuan', function () {
+    return view('bantuan');
+})->name('bantuan');
+
 
 // ==========================================
 // RUTE AUTENTIKASI
@@ -60,6 +70,19 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
+
+
+// ==========================================
+// RUTE PERMINTAAN MATERIAL (Hanya untuk pengguna login)
+// ==========================================
+Route::middleware(['auth'])->group(function () {
+    // Rute untuk Form Daftarkan Permintaan
+    Route::get('/permintaan-material', [PermintaanMaterialController::class, 'create'])->name('permintaan');
+    Route::post('/permintaan-material', [PermintaanMaterialController::class, 'store'])->name('permintaan.store');
+    
+    // Rute untuk Dashboard Permintaan (PENTING: Gunakan ini agar nama rute sesuai dengan form method GET)
+    Route::get('/dashboard/permintaan', [PermintaanMaterialController::class, 'dashboard'])->name('permintaan.dashboard');
+});
 
 
 // ==========================================

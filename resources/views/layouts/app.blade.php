@@ -28,11 +28,15 @@
 
     @php
         // Logika Deteksi Halaman Aktif untuk Navigasi
-        $isHome = request()->routeIs('home') || request()->is('/');
-        $isPasar = request()->routeIs('pasar.*');
+        // Tambahkan route 'pelajari' agar Beranda tetap bold!
+        $isHome = request()->routeIs('home') || request()->is('/') || request()->routeIs('pelajari');
+        $isPasar = request()->routeIs('pasar.*') || request()->routeIs('permintaan');
         $isAbout = request()->routeIs('about');
         $isDashboard =
-            request()->is('dashboard*') || request()->routeIs('laporan.*') || request()->routeIs('profile.*');
+            request()->is('dashboard*') ||
+            request()->routeIs('laporan.*') ||
+            request()->routeIs('profile.*') ||
+            request()->routeIs('permintaan.dashboard');
     @endphp
 
     <!-- Navbar Menggunakan Alpine.js untuk State -->
@@ -225,6 +229,8 @@
     <main>
         @yield('content')
     </main>
+
+    <x-layouts.footer />
 
 </body>
 

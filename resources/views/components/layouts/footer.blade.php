@@ -32,7 +32,9 @@
                     <li><a href="#" class="transition hover:text-emerald-800">Jelajahi Limbah</a></li>
                     <li><a href="#" class="transition hover:text-emerald-800">Tentang SIRKULA</a></li>
                     <li><a href="#" class="transition hover:text-emerald-800">Untuk Mitra</a></li>
-                    <li><a href="#" class="transition hover:text-emerald-800">Bantuan &amp; Panduan</a></li>
+                    <li><a href="{{ route('bantuan') }}"
+                            class="hover:text-[#093A25] hover:underline transition-colors">Bantuan &amp; Panduan</a>
+                    </li>
                 </ul>
             </nav>
 
@@ -51,7 +53,8 @@
         </div>
 
         {{-- Bagian bawah: hak cipta & disclaimer --}}
-        <div class="mt-12 flex flex-col gap-4 border-t border-emerald-900/10 pt-6 text-[11px] text-gray-500
+        <div
+            class="mt-12 flex flex-col gap-4 border-t border-emerald-900/10 pt-6 text-[11px] text-gray-500
                     md:flex-row md:items-start md:justify-between md:gap-12">
             <p class="shrink-0">
                 &copy; {{ date('Y') }} SIRKULA. Hak cipta dilindungi undang-undang.
