@@ -13,12 +13,21 @@ class User extends Authenticatable
 
     /**
      * Kolom yang diizinkan untuk diisi secara massal (Mass Assignment).
+     * Semua kolom yang disimpan oleh ProfileController::update() harus ada di sini,
+     * kalau tidak, nilainya akan dibuang diam-diam tanpa error.
      */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role', // <-- Sangat aman ditambahkan di sini
+        'role',
+        'nama_instansi',
+        'no_whatsapp',
+        'alamat_lengkap',
+        'kelurahan',
+        'kode_pos',
+        'latitude',
+        'longitude',
     ];
 
     /**
@@ -41,13 +50,12 @@ class User extends Authenticatable
     }
 
     // Relasi: Satu mitra memiliki banyak laporan limbah
-    // (Fungsi limbahs() yang error sudah dihapus, cukup gunakan ini saja)
     public function laporanLimbahs()
     {
         return $this->hasMany(LaporanLimbah::class, 'mitra_id');
     }
 
-    // Helper function untuk cek role dengan mudah nanti
+    // Helper function untuk cek role dengan mudah
     public function hasRole($role)
     {
         return $this->role === $role;

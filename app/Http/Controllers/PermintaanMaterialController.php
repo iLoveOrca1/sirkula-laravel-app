@@ -37,7 +37,7 @@ class PermintaanMaterialController extends Controller
             'frekuensi'     => $request->frekuensi,
             'lokasi'        => $request->lokasi,
             'deskripsi'     => $request->deskripsi,
-            'whatsapp'      => $request->whatsapp,
+            'no_whatsapp'      => $request->no_whatsapp,
         ]);
 
         return redirect()->route('dashboard.permintaan')->with('success', 'Permintaan material berhasil dipublikasikan!');
