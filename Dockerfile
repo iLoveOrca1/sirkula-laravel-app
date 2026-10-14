@@ -1,21 +1,13 @@
 FROM php:fpm
 
-# Dependensi sistem + library untuk ekstensi
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        git unzip \
-        libpq-dev \
-        libzip-dev \
-        libicu-dev \
-        libxml2-dev \
-        libpng-dev libjpeg-dev libfreetype6-dev \
-        libmemcached-dev zlib1g-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j"$(nproc)" \
+COPY --from=ghcr.io/mlocati/php-extension-installer:latest /usr/bin/install-php-extensions /usr/local/bin/
+
+RUN apt-get update && apt-get install -y --no-install-recommends git unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN install-php-extensions \
         pdo_pgsql pgsql pdo_mysql mysqli \
-        gd zip bcmath intl soap opcache \
-    && printf "\n\n\n\n\n\n" | pecl install redis memcached \
-    && docker-php-ext-enable redis memcached \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/pear
+        gd zip bcmath intl soap
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
