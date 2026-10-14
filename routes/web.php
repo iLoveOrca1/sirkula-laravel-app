@@ -51,18 +51,22 @@ Route::get('/bantuan', function () {
 
 
 // ==========================================
-// RUTE AUTENTIKASI
+// RUTE AUTENTIKASI (Login & Register Terpadu)
 // ==========================================
 
 Route::middleware('guest')->group(function () {
+    // Halaman Login (Menampilkan view terpadu dengan tab login aktif)
     Route::get('/login', [AuthController::class, 'index'])
         ->name('login');
 
+    // Proses autentikasi login
     Route::post('/login', [AuthController::class, 'authenticate']);
 
+    // Halaman Register (Menampilkan view terpadu dengan tab register aktif)
     Route::get('/register', [AuthController::class, 'register'])
         ->name('register');
 
+    // Proses penyimpanan data registrasi mitra baru
     Route::post('/register', [AuthController::class, 'store']);
 });
 
@@ -80,7 +84,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/permintaan-material', [PermintaanMaterialController::class, 'create'])->name('permintaan');
     Route::post('/permintaan-material', [PermintaanMaterialController::class, 'store'])->name('permintaan.store');
     
-    // Rute untuk Dashboard Permintaan (PENTING: Gunakan ini agar nama rute sesuai dengan form method GET)
+    // Rute untuk Dashboard Permintaan
     Route::get('/dashboard/permintaan', [PermintaanMaterialController::class, 'dashboard'])->name('permintaan.dashboard');
 });
 
@@ -122,7 +126,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:mitra'])->group(function () {
 
     // Dashboard laporan milik mitra yang login
-    // Mendukung pengurutan: /laporan-limbah?sort=tanggal&dir=desc
     Route::get('/laporan-limbah', [DashboardController::class, 'mitra'])
         ->name('laporan.index');
 
@@ -130,7 +133,7 @@ Route::middleware(['auth', 'role:mitra'])->group(function () {
     Route::get('/laporan-limbah/export', [DashboardController::class, 'exportMitra'])
         ->name('laporan.export');
 
-    // Mengubah status ketersediaan (Tersedia / Sedang Diproses / Sudah Diambil)
+    // Mengubah status ketersediaan
     Route::patch('/laporan/{id}/ubah-status', [DashboardController::class, 'ubahStatus'])
         ->whereNumber('id')
         ->name('laporan.ubahStatus');
@@ -206,4 +209,4 @@ Route::middleware('auth')->group(function () {
 
         return redirect()->route('pasar.index');
     })->name('dashboard');
-});
+});     

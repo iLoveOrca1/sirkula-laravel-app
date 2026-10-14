@@ -6,10 +6,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    // Menampilkan halaman form login
+    // Menampilkan halaman form login & register terpadu
     public function index()
     {
         return view('auth.login');
@@ -23,11 +24,10 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
+        // Checkbox "Ingat perangkat ini" pada form
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            
-            // PERBAIKAN: Semua user yang berhasil login langsung diarahkan ke terminal /dashboard
-            // Nanti file routes/web.php yang akan memilah mereka ke halaman masing-masing
+
             return redirect()->intended('/dashboard');
         }
 
@@ -42,38 +42,55 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
         return redirect('/');
     }
 
-    // Menampilkan halaman form pendaftaran
+    // Menampilkan halaman form pendaftaran (jika diakses via route terpisah)
     public function register()
     {
-        return view('auth.register');
+        return view('auth.login');
     }
 
-    // Memproses data pendaftaran
+    // Memproses data pendaftaran mitra baru dari form terpadu
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            // Hanya izinkan pendaftaran mandiri untuk mitra dan pembeli (Admin & Petugas dibuat manual/seeder)
-            'role' => 'required|in:mitra,pembeli' 
+            'name'           => ['required', 'string', 'max:255'], // Nama Bisnis / Fasilitas
+            'jenis_usaha'    => ['required', 'string', 'max:255'],
+            'email'          => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'whatsapp'       => ['required', 'string', 'max:20', 'regex:/^[0-9+\-\s()]{8,20}$/'],
+            'alamat_lengkap' => ['required', 'string', 'max:500'], // Kota / Lokasi Fasilitas
+            'password'       => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'email.unique'   => 'Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.',
+            'whatsapp.regex' => 'Format nomor WhatsApp tidak valid. Contoh: +62 812-3456-7890.',
+            'password.min'   => 'Kata sandi minimal 8 karakter.',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak sama.',
         ]);
+
+        // "Kecamatan, Kabupaten/Kota" -> bagian pertama dipakai sebagai wilayah (kelurahan)
+        // agar muncul di filter wilayah dan peta beranda.
+        $lokasi    = trim($request->alamat_lengkap);
+        $wilayah   = trim(Str::before($lokasi, ','));
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password), 
-            'role' => $request->role,
+            'name'           => trim($request->name),
+            'nama_instansi'  => trim($request->name), // Nama bisnis juga disimpan sebagai nama instansi
+            'jenis_usaha'    => $request->jenis_usaha,
+            'email'          => $request->email,
+            'no_whatsapp'    => trim($request->whatsapp),
+            'alamat_lengkap' => $lokasi,
+            'kelurahan'      => $wilayah !== '' ? $wilayah : null,
+            // Role SELALU mitra. Tidak diambil dari input form agar tidak bisa dimanipulasi.
+            'role'           => 'mitra',
+            'password'       => Hash::make($request->password),
         ]);
 
-        // Login otomatis
+        // Login otomatis setelah registrasi berhasil
         Auth::login($user);
+        $request->session()->regenerate();
 
-        // PERBAIKAN: Arahkan pengguna baru ke terminal /dashboard
         return redirect('/dashboard')->with('success', 'Pendaftaran berhasil! Selamat datang di Sirkula.');
     }
 }

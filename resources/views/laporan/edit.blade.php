@@ -17,8 +17,8 @@
         // ------------------------------------------------------------------
         // Status
         // ------------------------------------------------------------------
-        $st             = strtolower((string) $laporan->status);
-        $final          = $st === 'sudah diambil';
+        $st           = strtolower((string) $laporan->status);
+        $final        = $st === 'sudah diambil';
         $bisaUbahStatus = in_array($st, ['tersedia', 'sedang diproses'], true);
         $statusPublik   = in_array($st, ['tersedia', 'sedang diproses', 'sudah diambil'], true);
 
@@ -62,27 +62,57 @@
 
         $fotoUrl = $laporan->foto_limbah ? asset('storage/' . $laporan->foto_limbah) : null;
 
-        $inputClass = 'w-full bg-[#F0F5F0] border border-transparent rounded-xl py-3 px-4 text-sm text-[#2b332e] focus:bg-white focus:ring-2 focus:ring-[#1A4B36] focus:border-transparent outline-none transition-all';
-        $labelClass = 'block text-sm font-bold text-[#093A25] mb-2';
+        // Gaya input & label mengikuti desain: latar abu-hijau lembut tanpa border, label medium
+        $inputClass = 'w-full bg-[#F0F3EF] border border-transparent rounded-xl py-3 px-4 text-[15px] text-[#18221C] placeholder-[#9BA69E] focus:bg-white focus:ring-2 focus:ring-[#14452F] focus:border-transparent outline-none transition-all';
+        $labelClass = 'block text-[15px] font-medium text-[#18221C] mb-2';
     @endphp
 
-    <div class="bg-[#F6FBF5] min-h-screen pb-24 pt-8">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    {{-- Font: Inter (teks) + IBM Plex Mono (label teknis), sesuai desain --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .edit-limbah,
+        .edit-limbah input,
+        .edit-limbah select,
+        .edit-limbah textarea,
+        .edit-limbah button {
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+        }
+        #map-pin, #map-pin-shadow {
+            position: absolute; left: 50%; top: 150px; /* setengah tinggi peta (300px) */
+            pointer-events: none; z-index: 20;
+        }
+        #map-pin { transform: translate(-50%, -100%); filter: drop-shadow(0 2px 3px rgba(15,56,36,.25)); transition: transform .15s ease; }
+        #map-pin-shadow { width: 12px; height: 5px; border-radius: 50%; background: rgba(15,56,36,.28); transform: translate(-50%, -50%); transition: transform .15s ease, opacity .15s ease; }
+        #map-pin.is-lifting { transform: translate(-50%, calc(-100% - 8px)); }
+        #map-pin-shadow.is-lifting { transform: translate(-50%, -50%) scale(.7); opacity: .6; }
+        .edit-limbah h1,
+        .edit-limbah h2,
+        .edit-limbah h3 { letter-spacing: -0.02em; }
+        .edit-limbah .font-mono {
+            font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+            letter-spacing: 0;
+        }
+    </style>
+
+    <div class="edit-limbah bg-[#F6FBF5] min-h-screen pb-24 pt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- ========================================== --}}
-            {{-- HEADER                                      --}}
+            {{-- HEADER                                     --}}
             {{-- ========================================== --}}
             <div class="flex items-center justify-between gap-4 mb-5">
-                <nav class="flex flex-wrap items-center gap-1.5 text-[11px] font-mono text-gray-500" aria-label="Breadcrumb">
-                    <a href="{{ route('dashboard') }}" class="hover:text-[#093A25] hover:underline">Dashboard Mitra</a>
+                <nav class="flex flex-wrap items-center gap-1.5 text-xs font-mono text-[#5D6A62]" aria-label="Breadcrumb">
+                    <a href="{{ route('dashboard') }}" class="hover:text-[#14452F] hover:underline">Dashboard Mitra</a>
                     <span>/</span>
-                    <a href="{{ route('dashboard') }}#tabel-riwayat" class="hover:text-[#093A25] hover:underline">Limbah Saya</a>
+                    <a href="{{ route('dashboard') }}#tabel-riwayat" class="hover:text-[#14452F] hover:underline">Limbah Fasilitas</a>
                     <span>/</span>
-                    <span class="font-bold text-[#093A25]">Edit: {{ \Illuminate\Support\Str::limit($laporan->judul, 28) }}</span>
-                    <span class="bg-[#E4EBE4] text-gray-600 rounded px-1.5 py-0.5 text-[10px]">{{ $sku }}</span>
+                    <span class="font-semibold text-[#18221C]">Edit: {{ \Illuminate\Support\Str::limit($laporan->judul, 28) }}</span>
+                    <span class="bg-[#E4EBE4] text-[#5D6A62] rounded px-1.5 py-0.5 font-mono text-[10px]">{{ $sku }}</span>
                 </nav>
 
-                <a href="{{ route('dashboard') }}" class="hidden sm:inline-flex shrink-0 items-center gap-2 text-sm font-medium text-gray-600 hover:text-[#093A25] transition-colors">
+                <a href="{{ route('dashboard') }}" class="hidden sm:inline-flex shrink-0 items-center gap-2 text-[15px] font-medium text-[#18221C] hover:text-[#14452F] transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                     Kembali ke Dashboard Mitra
                 </a>
@@ -90,24 +120,24 @@
 
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 mb-8 border-b border-[#E1E9E1]">
                 <div>
-                    <p class="flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-widest text-[#093A25] mb-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#093A25]"></span>
+                    <p class="flex items-center gap-2 text-[10px] font-mono font-medium uppercase tracking-widest text-[#14452F] mb-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#14452F]"></span>
                         Formulir Pemutakhiran Neraca Sirkular
                     </p>
-                    <h1 class="text-3xl md:text-4xl font-extrabold text-[#093A25] tracking-tight">Edit Informasi Limbah</h1>
-                    <p class="mt-2 text-sm text-[#414943] max-w-xl leading-relaxed">
+                    <h1 class="text-3xl md:text-4xl font-medium text-[#111C16] tracking-tight">Edit Informasi Limbah</h1>
+                    <p class="mt-2 text-[15px] text-[#4A5650] max-w-xl leading-relaxed">
                         Perbarui spesifikasi material, lokasi pemuatan, atau status ketersediaan. Perubahan akan langsung tersinkronisasi ke katalog publik SIRKULA.
                     </p>
                 </div>
 
                 <div class="flex items-center gap-2 shrink-0">
-                    <span class="rounded-md bg-[#E4EBE4] px-3 py-1.5 font-mono text-[10px] font-semibold text-gray-600">ID Log: #{{ $sku }}</span>
+                    <span class="rounded-full bg-[#E4EBE4] px-3.5 py-1.5 font-mono text-xs font-medium text-[#5D6A62]">ID Log: #{{ $sku }}</span>
                     @if ($statusPublik)
-                        <span class="inline-flex items-center gap-1.5 rounded-full bg-[#C6ECCD] px-3 py-1.5 font-mono text-[10px] font-bold text-[#093A25]">
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-[#C6ECCD] px-3.5 py-1.5 font-mono text-xs font-medium text-[#093A25]">
                             <span class="w-1.5 h-1.5 rounded-full bg-[#093A25]"></span> Terindeks Publik
                         </span>
                     @else
-                        <span class="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-3 py-1.5 font-mono text-[10px] font-bold text-yellow-800">
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-3.5 py-1.5 font-mono text-xs font-medium text-yellow-800">
                             <span class="w-1.5 h-1.5 rounded-full bg-yellow-600"></span> {{ $pvStatusLabel }}
                         </span>
                     @endif
@@ -116,13 +146,13 @@
 
             {{-- Notifikasi --}}
             @if (session('success'))
-                <div class="mb-6 bg-green-50 text-green-800 p-4 rounded-xl border border-green-200 text-sm font-medium">{{ session('success') }}</div>
+                <div class="mb-6 bg-green-50 text-green-800 p-4 rounded-2xl border border-green-200 text-sm font-medium">{{ session('success') }}</div>
             @endif
             @if (session('error'))
-                <div class="mb-6 bg-red-50 text-red-700 p-4 rounded-xl border border-red-200 text-sm font-medium">{{ session('error') }}</div>
+                <div class="mb-6 bg-red-50 text-red-700 p-4 rounded-2xl border border-red-200 text-sm font-medium">{{ session('error') }}</div>
             @endif
             @if ($errors->any())
-                <div class="mb-6 bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 text-sm">
+                <div class="mb-6 bg-red-50 text-red-600 p-4 rounded-2xl border border-red-100 text-sm">
                     <ul class="list-disc pl-5">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -134,7 +164,7 @@
             <div class="flex flex-col lg:flex-row gap-8 items-start">
 
                 {{-- ========================================== --}}
-                {{-- KOLOM FORM                                  --}}
+                {{-- KOLOM FORM                                 --}}
                 {{-- ========================================== --}}
                 <div class="w-full lg:w-[62%] min-w-0">
 
@@ -146,22 +176,22 @@
                         <input type="hidden" name="tanggal_pencatatan" value="{{ old('tanggal_pencatatan', $tglCatat) }}">
 
                         {{-- ===== 01 INFORMASI MATERIAL ===== --}}
-                        <section class="bg-white rounded-2xl border border-[#EBEFEA] shadow-sm p-6 md:p-8">
-                            <div class="flex items-center justify-between gap-3 pb-4 mb-6 border-b border-[#EBEFEA]">
-                                <h2 class="flex items-center gap-2.5 text-lg font-bold text-[#093A25]">
-                                    <span class="rounded-md bg-[#1A4B36] px-2 py-0.5 font-mono text-xs font-bold text-white">01</span>
+                        <section class="bg-white rounded-3xl border border-[#EDF1EC] shadow-[0_4px_20px_rgba(0,0,0,0.02)] p-6 md:p-8">
+                            <div class="flex items-center justify-between gap-3 pb-4 mb-6 border-b border-[#EFEFEE]">
+                                <h2 class="flex items-center gap-2.5 text-lg font-medium text-[#111C16]">
+                                    <span class="rounded-md bg-[#14452F] px-2 py-0.5 font-mono text-xs font-medium text-white">01</span>
                                     Informasi Material Limbah
                                 </h2>
-                                <span class="font-mono text-[10px] font-semibold text-gray-500">Terakhir diubah: {{ $terakhirUbah ?? '-' }}</span>
+                                <span class="font-mono text-xs text-[#5D6A62]">Terakhir diubah: {{ $terakhirUbah ?? '-' }}</span>
                             </div>
 
                             <div class="space-y-6">
 
                                 {{-- Nama --}}
                                 <div>
-                                    <div class="flex items-center justify-between">
-                                        <label for="judul" class="{{ $labelClass }}">Nama Residu / Material <span class="text-red-500">*</span></label>
-                                        <span class="font-mono text-[10px] text-gray-500 mb-2"><span id="judul-count">0</span> / 80 Karakter</span>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <label for="judul" class="{{ $labelClass }} !mb-0">Nama Residu / Material <span class="text-red-500">*</span></label>
+                                        <span class="font-mono text-xs text-[#5D6A62]"><span id="judul-count">0</span> / 80 Karakter</span>
                                     </div>
                                     <input type="text" id="judul" name="judul" value="{{ old('judul', $laporan->judul) }}" maxlength="80" required class="{{ $inputClass }}">
                                 </div>
@@ -169,15 +199,15 @@
                                 {{-- Kategori --}}
                                 <div>
                                     <label class="{{ $labelClass }}">Kategori Aliran Limbah <span class="text-red-500">*</span></label>
-                                    <div class="flex flex-wrap gap-2">
+                                    <div class="flex flex-wrap gap-2.5">
                                         @foreach ($kategori as $kat)
                                             <label class="cursor-pointer">
                                                 <input type="radio" name="kategori_id" value="{{ $kat->id }}" required
                                                        data-nama="{{ $kat->nama_kategori }}"
                                                        {{ (string) $kategoriDipilih === (string) $kat->id ? 'checked' : '' }}
                                                        class="kategori-radio sr-only">
-                                                <span class="kategori-pill inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors bg-[#F0F5F0] text-[#2b332e]">
-                                                    <span class="kategori-dot w-3.5 h-3.5 rounded-full border-2 border-gray-400 bg-white"></span>
+                                                <span class="kategori-pill inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[13px] font-medium transition-all bg-[#F0F3EF] text-[#3B4740] border border-transparent">
+                                                    <span class="kategori-dot w-3.5 h-3.5 rounded-full border border-gray-400 bg-white"></span>
                                                     {{ $kat->nama_kategori ?? 'Kategori ' . $kat->id }}
                                                 </span>
                                             </label>
@@ -187,30 +217,30 @@
 
                                 {{-- Foto --}}
                                 <div>
-                                    <div class="flex items-center justify-between">
-                                        <label class="{{ $labelClass }}">Foto Verifikasi Kondisi Material</label>
-                                        <span class="font-mono text-[10px] text-gray-500 mb-2">{{ $fotoUrl ? '1 Terunggah' : 'Belum ada foto' }} (Maks. 1)</span>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <label class="{{ $labelClass }} !mb-0">Foto Verifikasi Kondisi Material</label>
+                                        <span class="font-mono text-xs text-[#14452F]">{{ $fotoUrl ? '1 Terunggah' : 'Belum ada foto' }} (Maks. 1)</span>
                                     </div>
 
-                                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
-                                        <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#EBEFEA] border border-[#E1E9E1]">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#F0F3EF]">
                                             @if ($fotoUrl)
                                                 <img id="foto-tile" src="{{ $fotoUrl }}" alt="Foto {{ $laporan->judul }}" class="h-full w-full object-cover">
                                             @else
                                                 <img id="foto-tile" src="" alt="Preview" class="hidden h-full w-full object-cover">
-                                                <div id="foto-tile-kosong" class="absolute inset-0 flex items-center justify-center text-[10px] font-mono text-gray-400">Tidak ada foto</div>
+                                                <div id="foto-tile-kosong" class="absolute inset-0 flex items-center justify-center font-mono text-xs text-[#5D6A62]">Tidak ada foto</div>
                                             @endif
-                                            <span id="foto-badge" class="absolute left-2 bottom-2 rounded bg-[#093A25] px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-widest text-white">Utama</span>
+                                            <span id="foto-badge" class="absolute left-2.5 bottom-2.5 rounded-md bg-[#14452F] px-2 py-1 font-mono text-[10px] font-medium uppercase tracking-widest text-white">Utama</span>
                                         </div>
 
                                         <label for="foto_limbah"
-                                               class="aspect-[4/3] flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[#C9D6C9] bg-[#F6FBF5] text-center text-sm font-semibold text-[#093A25] hover:bg-[#F0F5F0] transition-colors cursor-pointer px-3">
-                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2zM12 8v4m-2-2h4"/></svg>
+                                               class="aspect-[4/3] flex flex-col items-center justify-center gap-2.5 rounded-2xl border border-dashed border-[#C9D4C7] bg-[#F0F3EF] text-center font-mono text-xs font-medium text-[#3B4740] hover:bg-[#E7ECE6] transition-all cursor-pointer px-4">
+                                            <svg class="w-6 h-6 text-[#3B4740]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2zM12 8v4m-2-2h4"/></svg>
                                             <span id="foto-label">Unggah Foto Baru</span>
                                         </label>
                                         <input type="file" id="foto_limbah" name="foto_limbah" accept="image/png,image/jpeg,image/jpg" class="sr-only">
                                     </div>
-                                    <p class="mt-2 text-xs text-gray-500">Biarkan kosong jika tidak ingin mengganti foto. Format JPG atau PNG, maksimal 2MB.</p>
+                                    <p class="mt-2 text-xs text-[#5D6A62]">Biarkan kosong jika tidak ingin mengganti foto. Format JPG atau PNG, maksimal 2MB.</p>
                                 </div>
 
                                 {{-- Volume & satuan --}}
@@ -219,8 +249,8 @@
                                         <label for="estimasi_volume" class="{{ $labelClass }}">Jumlah Estimasi Batch <span class="text-red-500">*</span></label>
                                         <div class="relative">
                                             <input type="number" id="estimasi_volume" name="estimasi_volume" step="any" min="0" required
-                                                   value="{{ old('estimasi_volume', $laporan->estimasi_volume) }}" class="{{ $inputClass }} pr-20 font-mono font-bold">
-                                            <span id="chip-satuan" class="absolute right-3 top-1/2 -translate-y-1/2 rounded bg-[#E1E9E1] px-2 py-1 font-mono text-[10px] font-bold text-gray-600 pointer-events-none">{{ $satuanLabel[$satuanAwal] ?? strtoupper($satuanAwal) }}</span>
+                                                   value="{{ old('estimasi_volume', $laporan->estimasi_volume) }}" class="{{ $inputClass }} pr-20 font-mono font-semibold">
+                                            <span id="chip-satuan" class="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-md bg-[#E4EBE4] px-2 py-1 font-mono text-[11px] font-medium text-[#5D6A62] pointer-events-none">{{ $satuanLabel[$satuanAwal] ?? strtoupper($satuanAwal) }}</span>
                                         </div>
                                     </div>
                                     <div>
@@ -247,14 +277,14 @@
                         </section>
 
                         {{-- ===== 02 LOKASI ===== --}}
-                        <section class="bg-white rounded-2xl border border-[#EBEFEA] shadow-sm p-6 md:p-8">
-                            <div class="flex items-center justify-between gap-3 pb-4 mb-6 border-b border-[#EBEFEA]">
-                                <h2 class="flex items-center gap-2.5 text-lg font-bold text-[#093A25]">
-                                    <span class="rounded-md bg-[#1A4B36] px-2 py-0.5 font-mono text-xs font-bold text-white">02</span>
+                        <section class="bg-white rounded-3xl border border-[#EDF1EC] shadow-[0_4px_20px_rgba(0,0,0,0.02)] p-6 md:p-8">
+                            <div class="flex items-center justify-between gap-3 pb-4 mb-6 border-b border-[#EFEFEE]">
+                                <h2 class="flex items-center gap-2.5 text-lg font-medium text-[#111C16]">
+                                    <span class="rounded-md bg-[#14452F] px-2 py-0.5 font-mono text-xs font-medium text-white">02</span>
                                     Lokasi &amp; Titik Pengambilan
                                 </h2>
-                                <span class="inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold text-gray-500">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s7-5.686 7-11a7 7 0 10-14 0c0 5.314 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                                <span class="inline-flex items-center gap-1.5 font-mono text-xs text-[#5D6A62]">
+                                    <svg class="w-3.5 h-3.5 text-[#14452F]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s7-5.686 7-11a7 7 0 10-14 0c0 5.314 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
                                     Titik Koordinat
                                 </span>
                             </div>
@@ -263,74 +293,86 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <label class="cursor-pointer block">
                                         <input type="radio" name="jenis_lokasi" id="lokasi_utama" value="utama" class="lokasi-radio sr-only" {{ $jenisLokasi === 'utama' ? 'checked' : '' }}>
-                                        <div class="lokasi-card h-full rounded-xl border-2 border-[#EBEFEA] p-4 transition-all">
-                                            <p class="text-sm font-bold text-[#093A25]">Gunakan Alamat Utama Profil</p>
-                                            <p class="mt-1 text-xs text-[#414943]">Koordinat otomatis dari profil akun Anda.</p>
+                                        <div class="lokasi-card h-full rounded-2xl border-2 border-transparent p-4 transition-all bg-[#F0F3EF]">
+                                            <p class="text-[15px] font-medium text-[#111C16]">Gunakan Alamat Utama Profil</p>
+                                            <p class="mt-1 text-xs text-[#4A5650]">Koordinat otomatis dari profil akun Anda.</p>
                                         </div>
                                     </label>
 
                                     <label class="cursor-pointer block">
                                         <input type="radio" name="jenis_lokasi" id="lokasi_lainnya" value="lainnya" class="lokasi-radio sr-only" {{ $jenisLokasi === 'lainnya' ? 'checked' : '' }}>
-                                        <div class="lokasi-card h-full rounded-xl border-2 border-[#EBEFEA] p-4 transition-all">
-                                            <p class="text-sm font-bold text-[#093A25]">Tentukan Titik Lain di Peta</p>
-                                            <p class="mt-1 text-xs text-[#414943]">Klik peta atau geser pin untuk memindahkan titik.</p>
+                                        <div class="lokasi-card h-full rounded-2xl border-2 border-transparent p-4 transition-all bg-[#F0F3EF]">
+                                            <p class="text-[15px] font-medium text-[#111C16]">Tentukan Titik Lain di Peta</p>
+                                            <p class="mt-1 text-xs text-[#4A5650]">Geser peta agar pin berada tepat di titik pengambilan.</p>
                                         </div>
                                     </label>
                                 </div>
 
                                 {{-- Alamat profil (referensi) --}}
-                                <div id="info-lokasi-utama" class="rounded-xl bg-[#F0F5F0] px-4 py-3 text-sm text-[#2b332e]" style="{{ $jenisLokasi === 'utama' ? '' : 'display: none;' }}">
-                                    <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-1">Alamat Utama Profil</p>
+                                <div id="info-lokasi-utama" class="rounded-2xl bg-[#F0F3EF] p-4 text-sm text-[#18221C]" style="{{ $jenisLokasi === 'utama' ? '' : 'display: none;' }}">
+                                    <p class="font-mono text-[10px] uppercase tracking-widest text-[#5D6A62] mb-1">Alamat Utama Profil</p>
                                     @if ($user->alamat_lengkap || $user->kelurahan)
                                         <p class="leading-relaxed">{{ $user->alamat_lengkap ?: $user->kelurahan }}@if ($user->kode_pos), {{ $user->kode_pos }}@endif</p>
                                     @else
-                                        <p class="text-gray-600">Alamat profil belum diisi.</p>
+                                        <p class="text-[#5D6A62]">Alamat profil belum diisi.</p>
                                     @endif
-                                    <a href="{{ route('profile.edit') }}" class="mt-1.5 inline-block text-xs font-semibold text-[#1A4B36] hover:underline">Ubah alamat di Pengaturan Profil &rarr;</a>
+                                    <a href="{{ route('profile.edit') }}" class="mt-2 inline-block text-xs font-medium text-[#14452F] hover:underline">Ubah alamat di Pengaturan Profil &rarr;</a>
                                 </div>
 
                                 {{-- Peta --}}
                                 <div id="form-lokasi-lainnya" style="{{ $jenisLokasi === 'lainnya' ? '' : 'display: none;' }}">
-                                    <div id="map" style="height: 300px;" class="w-full rounded-2xl border border-[#E1E9E1] z-10 overflow-hidden"></div>
+                                    <div class="relative">
+                                        <div id="map" style="height: 300px;" class="w-full rounded-2xl border border-[#E5ECE4] z-10 overflow-hidden"></div>
+
+                                        {{-- Pin tetap di tengah peta; peta yang digeser --}}
+                                        <div id="map-pin-shadow" aria-hidden="true"></div>
+                                        <div id="map-pin" aria-hidden="true">
+                                            <svg width="40" height="46" viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M20 46C20 46 4 30 4 18a16 16 0 1132 0c0 12-16 28-16 28z" fill="#14452F" stroke="#FFFFFF" stroke-width="2.5" stroke-linejoin="round"/>
+                                                <circle cx="20" cy="18" r="6.5" fill="#FFFFFF"/>
+                                                <circle cx="20" cy="18" r="2.8" fill="#14452F"/>
+                                            </svg>
+                                        </div>
+                                    </div>
 
                                     <input type="hidden" name="latitude" id="latitude" value="{{ $latAwal }}">
                                     <input type="hidden" name="longitude" id="longitude" value="{{ $lngAwal }}">
 
-                                    <div class="mt-3">
-                                        <label for="preview_alamat" class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-1">Alamat Titik Terpilih (Otomatis)</label>
+                                    <div class="mt-3.5">
+                                        <label for="preview_alamat" class="block font-mono text-[10px] uppercase tracking-widest text-[#5D6A62] mb-1">Alamat Titik Terpilih (Otomatis)</label>
                                         <textarea id="preview_alamat" readonly rows="2" placeholder="Mendeteksi lokasi..."
-                                                  class="w-full rounded-xl bg-[#F0F5F0] px-4 py-3 text-sm text-gray-600 outline-none resize-none"></textarea>
-                                        <p class="mt-1 font-mono text-[10px] text-gray-500">Koordinat: <span id="koordinat-teks">-</span></p>
+                                                  class="w-full rounded-xl bg-[#F0F3EF] border border-transparent px-4 py-3 text-sm text-[#3B4740] outline-none resize-none"></textarea>
+                                        <p class="mt-1 font-mono text-xs text-[#5D6A62]">Koordinat: <span id="koordinat-teks" class="font-semibold text-[#111C16]">-</span></p>
                                     </div>
                                 </div>
                             </div>
                         </section>
 
                         {{-- ===== 03 KONTAK ===== --}}
-                        <section class="bg-white rounded-2xl border border-[#EBEFEA] shadow-sm p-6 md:p-8">
-                            <div class="flex items-center justify-between gap-3 pb-4 mb-6 border-b border-[#EBEFEA]">
-                                <h2 class="flex items-center gap-2.5 text-lg font-bold text-[#093A25]">
-                                    <span class="rounded-md bg-[#1A4B36] px-2 py-0.5 font-mono text-xs font-bold text-white">03</span>
+                        <section class="bg-white rounded-3xl border border-[#EDF1EC] shadow-[0_4px_20px_rgba(0,0,0,0.02)] p-6 md:p-8">
+                            <div class="flex items-center justify-between gap-3 pb-4 mb-6 border-b border-[#EFEFEE]">
+                                <h2 class="flex items-center gap-2.5 text-lg font-medium text-[#111C16]">
+                                    <span class="rounded-md bg-[#14452F] px-2 py-0.5 font-mono text-xs font-medium text-white">03</span>
                                     Kontak PIC Pengambilan
                                 </h2>
                             </div>
 
                             <label class="{{ $labelClass }}">Nomor WhatsApp Koordinator Lapangan</label>
                             <div class="flex flex-wrap items-center gap-3">
-                                <div class="flex items-center gap-2.5 rounded-xl bg-[#F0F5F0] px-4 py-3 text-sm font-mono text-[#2b332e] min-w-[14rem]">
-                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.95.68l1.5 4.5a1 1 0 01-.5 1.2l-2.26 1.13a11 11 0 005.5 5.5l1.13-2.26a1 1 0 011.2-.5l4.5 1.5a1 1 0 01.68.95V19a2 2 0 01-2 2h-1C9.72 21 3 14.28 3 6V5z"/></svg>
+                                <div class="flex items-center gap-2.5 rounded-xl bg-[#F0F3EF] px-4 py-3 text-sm font-mono text-[#18221C] min-w-[16rem]">
+                                    <svg class="w-4 h-4 text-[#3B4740]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.95.68l1.5 4.5a1 1 0 01-.5 1.2l-2.26 1.13a11 11 0 005.5 5.5l1.13-2.26a1 1 0 011.2-.5l4.5 1.5a1 1 0 01.68.95V19a2 2 0 01-2 2h-1C9.72 21 3 14.28 3 6V5z"/></svg>
                                     {{ $user->no_whatsapp ?: 'Belum diisi' }}
                                 </div>
-                                <a href="{{ route('profile.edit') }}" class="text-xs font-semibold text-[#1A4B36] hover:underline">Ubah di Pengaturan Profil &rarr;</a>
+                                <a href="{{ route('profile.edit') }}" class="text-xs font-medium text-[#14452F] hover:underline">Ubah di Pengaturan Profil &rarr;</a>
                             </div>
-                            <p class="mt-3 text-xs italic text-gray-500">*Transaksi dan kesepakatan logistik dikoordinasikan langsung melalui kanal ini. Nomor mengikuti data profil akun Anda.</p>
+                            <p class="mt-3 text-xs italic text-[#5D6A62]">*Transaksi dan kesepakatan logistik dikoordinasikan langsung melalui kanal ini. Nomor mengikuti data profil akun Anda.</p>
                         </section>
 
                         {{-- ===== 04 STATUS ===== --}}
-                        <section class="bg-white rounded-2xl border border-[#EBEFEA] shadow-sm p-6 md:p-8">
-                            <div class="flex items-center justify-between gap-3 pb-4 mb-6 border-b border-[#EBEFEA]">
-                                <h2 class="flex items-center gap-2.5 text-lg font-bold text-[#093A25]">
-                                    <span class="rounded-md bg-[#1A4B36] px-2 py-0.5 font-mono text-xs font-bold text-white">04</span>
+                        <section class="bg-white rounded-3xl border border-[#EDF1EC] shadow-[0_4px_20px_rgba(0,0,0,0.02)] p-6 md:p-8">
+                            <div class="flex items-center justify-between gap-3 pb-4 mb-6 border-b border-[#EFEFEE]">
+                                <h2 class="flex items-center gap-2.5 text-lg font-medium text-[#111C16]">
+                                    <span class="rounded-md bg-[#14452F] px-2 py-0.5 font-mono text-xs font-medium text-white">04</span>
                                     Status Ketersediaan Listing
                                 </h2>
                             </div>
@@ -340,22 +382,22 @@
                                     'tersedia' => [
                                         'Tersedia',
                                         'Tampil di katalog publik, terbuka menerima penawaran mitra daur ulang.',
-                                        'text-[#093A25]',
+                                        'text-[#18221C]',
                                     ],
                                     'sedang diproses' => [
                                         'Sedang Diproses',
                                         'Kemitraan sedang berjalan, menunggu jadwal penjemputan armada.',
-                                        'text-[#C77D14]',
+                                        'text-[#D98A1F]',
                                     ],
                                     'sudah diambil' => [
                                         'Sudah Diambil',
                                         'Batch telah diangkut. Status ini final dan tersimpan di rekap sirkulasi Anda.',
-                                        'text-gray-600',
+                                        'text-[#6B756E]',
                                     ],
                                 ];
                             @endphp
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
                                 @foreach ($opsiStatus as $nilai => [$judulOpsi, $keterangan, $warnaJudul])
                                     @php $aktif = $st === $nilai; @endphp
                                     <button type="submit" form="form-status" name="status" value="{{ $nilai }}"
@@ -364,28 +406,28 @@
                                                 onclick="return confirm('Status &quot;Sudah Diambil&quot; bersifat final dan tidak dapat diubah lagi. Lanjutkan?');"
                                             @endif
                                             class="text-left rounded-xl border-2 p-4 transition-all
-                                                   {{ $aktif ? 'bg-[#E8F5EA] border-[#1A4B36]' : 'bg-[#F0F5F0] border-transparent' }}
-                                                   {{ (! $bisaUbahStatus || $aktif) ? 'cursor-default' : 'hover:border-[#9DB8A5] hover:bg-white' }}
+                                                   {{ $aktif ? 'bg-[#E8F5EA] border-[#14452F]' : 'bg-[#F0F3EF] border-transparent' }}
+                                                   {{ (! $bisaUbahStatus || $aktif) ? 'cursor-default' : 'hover:border-[#14452F] hover:bg-white' }}
                                                    {{ (! $bisaUbahStatus && ! $aktif) ? 'opacity-60' : '' }}">
                                         <span class="flex items-center justify-between gap-2">
-                                            <span class="text-sm font-bold {{ $warnaJudul }}">{{ $judulOpsi }}</span>
-                                            <span class="w-4 h-4 shrink-0 rounded-full border-2 flex items-center justify-center {{ $aktif ? 'border-[#1A4B36]' : 'border-gray-300 bg-white' }}">
+                                            <span class="text-[15px] font-medium {{ $warnaJudul }}">{{ $judulOpsi }}</span>
+                                            <span class="w-4 h-4 shrink-0 rounded-full border flex items-center justify-center {{ $aktif ? 'border-[#14452F]' : 'border-gray-400 bg-white' }}">
                                                 @if ($aktif)
-                                                    <span class="w-2 h-2 rounded-full bg-[#1A4B36]"></span>
+                                                    <span class="w-2 h-2 rounded-full bg-[#14452F]"></span>
                                                 @endif
                                             </span>
                                         </span>
-                                        <span class="mt-2 block text-xs leading-relaxed text-[#414943]">{{ $keterangan }}</span>
+                                        <span class="mt-2 block text-xs leading-relaxed text-[#4A5650] font-normal">{{ $keterangan }}</span>
                                     </button>
                                 @endforeach
                             </div>
 
                             @if ($final)
-                                <p class="mt-4 rounded-lg bg-[#F0F5F0] px-4 py-3 text-xs text-gray-600">Batch ini sudah diambil, sehingga statusnya tidak dapat diubah lagi.</p>
+                                <p class="mt-4 rounded-xl bg-[#F0F3EF] p-3.5 text-xs text-[#4A5650]">Batch ini sudah diambil, sehingga statusnya tidak dapat diubah lagi.</p>
                             @elseif (! $bisaUbahStatus)
-                                <p class="mt-4 rounded-lg bg-[#F0F5F0] px-4 py-3 text-xs text-gray-600">Status baru bisa diubah setelah laporan disetujui admin. Saat ini: <strong>{{ $pvStatusLabel }}</strong>.</p>
+                                <p class="mt-4 rounded-xl bg-[#F0F3EF] p-3.5 text-xs text-[#4A5650]">Status baru bisa diubah setelah laporan disetujui admin. Saat ini: <strong>{{ $pvStatusLabel }}</strong>.</p>
                             @else
-                                <p class="mt-4 text-xs text-gray-500">Mengubah status langsung tersimpan dan terpisah dari formulir di atas. Simpan dulu perubahan formulir bila ada.</p>
+                                <p class="mt-4 text-xs text-[#5D6A62]">Mengubah status langsung tersimpan dan terpisah dari formulir di atas. Simpan dulu perubahan formulir bila ada.</p>
                             @endif
                         </section>
 
@@ -393,14 +435,14 @@
                         <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
                             <button type="submit" form="form-hapus"
                                     onclick="return confirm('Apakah Anda yakin ingin menghapus informasi limbah ini? Tindakan ini tidak dapat dibatalkan.');"
-                                    class="inline-flex items-center gap-2 rounded-xl bg-[#FFD9D4] px-5 py-3 text-sm font-bold text-[#8A1F10] hover:bg-[#FFC9C1] transition-colors">
+                                    class="inline-flex items-center gap-2 rounded-xl bg-[#FFD9D4] px-5 py-3 text-[15px] font-medium text-[#8A1F10] hover:bg-[#FFC9C1] transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>
                                 Hapus Informasi Ini
                             </button>
 
                             <div class="flex items-center gap-3 ml-auto">
-                                <a href="{{ route('dashboard') }}" class="rounded-xl bg-[#E4EBE4] px-6 py-3 text-sm font-bold text-gray-600 hover:bg-[#D8E2D8] transition-colors">Batal</a>
-                                <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-[#1A4B36] px-6 py-3 text-sm font-bold text-white shadow-md hover:bg-[#093A25] transition-colors">
+                                <a href="{{ route('dashboard') }}" class="rounded-xl bg-[#E4EBE4] px-6 py-3 text-[15px] font-medium text-[#4A5650] hover:bg-[#D8E2D8] transition-colors">Batal</a>
+                                <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-[#14452F] hover:bg-[#0C3B26] text-white px-6 py-3 text-[15px] font-medium transition-colors">
                                     Simpan Perubahan Limbah
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                                 </button>
@@ -408,7 +450,7 @@
                         </div>
                     </form>
 
-                    {{-- Form terpisah untuk ubah status & hapus (dipicu tombol di atas lewat atribut form="...") --}}
+                    {{-- Form terpisah untuk ubah status & hapus --}}
                     <form id="form-status" action="{{ route('laporan.ubahStatus', $laporan->id) }}" method="POST" class="hidden">
                         @csrf
                         @method('PATCH')
@@ -420,54 +462,54 @@
                 </div>
 
                 {{-- ========================================== --}}
-                {{-- KOLOM PRATINJAU                             --}}
+                {{-- KOLOM PRATINJAU                            --}}
                 {{-- ========================================== --}}
                 <aside class="w-full lg:w-[38%] lg:sticky lg:top-6 space-y-5 min-w-0">
 
                     <div>
                         <div class="flex items-center justify-between mb-3">
-                            <p class="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-[#093A25]">
-                                <span class="w-1.5 h-1.5 rounded-full bg-[#093A25]"></span> Pratinjau Tampilan Recycler
+                            <p class="flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-widest text-[#14452F]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#14452F]"></span> Pratinjau Tampilan Recycler
                             </p>
-                            <span class="font-mono text-[10px] text-gray-500">Live Render</span>
+                            <span class="font-mono text-xs text-[#5D6A62]">Live Render</span>
                         </div>
 
-                        <div class="overflow-hidden rounded-3xl bg-white border border-[#EBEFEA] shadow-md">
-                            <div class="relative h-52 bg-[#EBEFEA]">
+                        <div class="overflow-hidden rounded-3xl bg-white border border-[#EDF1EC] shadow-md">
+                            <div class="relative h-56 bg-[#EBEFEA]">
                                 @if ($fotoUrl)
                                     <img id="pv-foto" src="{{ $fotoUrl }}" alt="Pratinjau" class="h-full w-full object-cover">
-                                    <div id="pv-foto-kosong" class="hidden absolute inset-0 items-center justify-center text-[10px] font-mono text-gray-400">Belum ada foto</div>
+                                    <div id="pv-foto-kosong" class="hidden absolute inset-0 items-center justify-center font-mono text-xs text-[#5D6A62]">Belum ada foto</div>
                                 @else
                                     <img id="pv-foto" src="" alt="Pratinjau" class="hidden h-full w-full object-cover">
-                                    <div id="pv-foto-kosong" class="absolute inset-0 flex items-center justify-center text-[10px] font-mono text-gray-400">Belum ada foto</div>
+                                    <div id="pv-foto-kosong" class="absolute inset-0 flex items-center justify-center font-mono text-xs text-[#5D6A62]">Belum ada foto</div>
                                 @endif
 
-                                <span class="absolute left-3 top-3 inline-flex items-center rounded-full px-2.5 py-1 font-mono text-[10px] font-bold shadow-sm {{ $pvStatusClass }}">{{ $pvStatusLabel }}</span>
-                                <span class="absolute right-3 bottom-3 rounded-lg bg-[#0B2E20]/85 px-3 py-1.5 font-mono text-base font-bold text-white">
-                                    <span id="pv-volume">0</span> <span id="pv-satuan" class="text-[10px] font-semibold text-gray-300">KG</span>
+                                <span class="absolute left-3.5 top-3.5 inline-flex items-center rounded-full px-3 py-1 font-mono text-xs font-medium {{ $pvStatusClass }}">{{ $pvStatusLabel }}</span>
+                                <span class="absolute right-3.5 bottom-3.5 rounded-lg bg-[#0F3824]/90 backdrop-blur px-3 py-1.5 font-mono text-base font-medium text-white">
+                                    <span id="pv-volume">0</span> <span id="pv-satuan" class="text-[10px] font-normal text-gray-300">KG</span>
                                 </span>
                             </div>
 
-                            <div class="p-5">
-                                <div class="flex items-center justify-between gap-3 font-mono text-[10px] text-gray-500">
+                            <div class="p-6">
+                                <div class="flex items-center justify-between gap-3 font-mono text-xs text-[#5D6A62] mb-2">
                                     <span class="truncate">{{ $namaInstansi }}@if ($wilayah) &bull; {{ $wilayah }}@endif</span>
-                                    <span id="pv-kategori" class="shrink-0 uppercase tracking-wide">{{ $namaKategoriAwal }}</span>
+                                    <span id="pv-kategori" class="shrink-0 tracking-wide font-medium text-[#14452F]">{{ $namaKategoriAwal }}</span>
                                 </div>
-                                <h3 id="pv-judul" class="mt-2 text-xl font-bold leading-tight text-[#093A25]">{{ old('judul', $laporan->judul) }}</h3>
-                                <p id="pv-deskripsi" class="mt-2 text-xs leading-relaxed text-gray-600 line-clamp-3">{{ old('deskripsi', $laporan->deskripsi) }}</p>
+                                <h3 id="pv-judul" class="text-xl font-medium leading-snug text-[#111C16]">{{ old('judul', $laporan->judul) }}</h3>
+                                <p id="pv-deskripsi" class="mt-2.5 text-[13px] leading-relaxed text-[#4A5650] line-clamp-3">{{ old('deskripsi', $laporan->deskripsi) }}</p>
 
-                                <div class="mt-5 rounded-xl bg-[#2F5E47] py-3 text-center text-sm font-bold text-white">Hubungi Pengelola Fasilitas</div>
-                                <p class="mt-3 text-center text-[10px] text-gray-500">Transaksi dan pengambilan dilakukan langsung dengan mitra.</p>
+                                <div class="mt-6 rounded-xl bg-[#14452F] py-3.5 text-center text-[15px] font-medium text-white">Hubungi Pengelola Fasilitas</div>
+                                <p class="mt-3 text-center text-xs text-[#5D6A62]">Transaksi dan pengambilan dilakukan langsung dengan mitra.</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="rounded-2xl bg-[#E8EFE8] p-5">
-                        <p class="flex items-center gap-2 font-bold text-[#093A25]">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 12.5l2.5 2.5L16 9.5"/></svg>
+                    <div class="rounded-3xl bg-[#EAF2E9] p-5 border border-[#D5E4D3]">
+                        <p class="flex items-center gap-2 text-[15px] font-medium text-[#111C16]">
+                            <svg class="w-5 h-5 text-[#14452F]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 12.5l2.5 2.5L16 9.5"/></svg>
                             Protokol Transparansi SIRKULA
                         </p>
-                        <p class="mt-2 text-xs leading-relaxed text-[#414943]">
+                        <p class="mt-2 text-[13px] leading-relaxed text-[#4A5650]">
                             Data material yang akurat mempercepat konfirmasi recycler. Pastikan berat tertera merefleksikan estimasi terkini, dan perbarui status begitu pengambilan berjalan.
                         </p>
                     </div>
@@ -517,13 +559,13 @@
                     const dot = pill.querySelector('.kategori-dot');
                     const on = radio.checked;
 
-                    pill.classList.toggle('bg-[#1A4B36]', on);
+                    pill.classList.toggle('bg-[#14452F]', on);
                     pill.classList.toggle('text-white', on);
-                    pill.classList.toggle('bg-[#F0F5F0]', !on);
-                    pill.classList.toggle('text-[#2b332e]', !on);
+                    pill.classList.toggle('bg-[#F0F3EF]', !on);
+                    pill.classList.toggle('text-[#3B4740]', !on);
 
                     dot.classList.toggle('border-white', on);
-                    dot.classList.toggle('bg-[#1A4B36]', on);
+                    dot.classList.toggle('bg-[#14452F]', on);
                     dot.classList.toggle('border-gray-400', !on);
                     dot.classList.toggle('bg-white', !on);
 
@@ -566,15 +608,15 @@
             const lokasiRadios = document.querySelectorAll('.lokasi-radio');
 
             let map = null;
-            let marker = null;
             let geocodeTimeout = null;
 
             function syncLokasiCard() {
                 lokasiRadios.forEach(function (radio) {
                     const card = radio.parentElement.querySelector('.lokasi-card');
-                    card.classList.toggle('bg-[#F0F5F0]', radio.checked);
-                    card.classList.toggle('border-[#1A4B36]', radio.checked);
-                    card.classList.toggle('border-[#EBEFEA]', !radio.checked);
+                    card.classList.toggle('bg-[#F0F3EF]', !radio.checked);
+                    card.classList.toggle('bg-[#E8F5EA]', radio.checked);
+                    card.classList.toggle('border-[#14452F]', radio.checked);
+                    card.classList.toggle('border-transparent', !radio.checked);
                 });
             }
 
@@ -616,17 +658,27 @@
                     attribution: '&copy; OpenStreetMap'
                 }).addTo(map);
 
-                marker = L.marker([lat, lng], { draggable: true }).addTo(map);
                 setLocation(lat, lng);
 
-                marker.on('dragend', function () {
-                    const p = marker.getLatLng();
-                    setLocation(p.lat, p.lng);
+                const pin = $('map-pin');
+                const pinShadow = $('map-pin-shadow');
+
+                // Pin terkunci di tengah; titik koordinat mengikuti pusat peta saat digeser
+                map.on('movestart', function () {
+                    pin.classList.add('is-lifting');
+                    pinShadow.classList.add('is-lifting');
                 });
 
+                map.on('moveend', function () {
+                    pin.classList.remove('is-lifting');
+                    pinShadow.classList.remove('is-lifting');
+                    const c = map.getCenter();
+                    setLocation(c.lat, c.lng);
+                });
+
+                // Klik peta memindahkan peta sehingga titik yang diklik berada di bawah pin
                 map.on('click', function (e) {
-                    marker.setLatLng(e.latlng);
-                    setLocation(e.latlng.lat, e.latlng.lng);
+                    map.panTo(e.latlng);
                 });
             }
 
@@ -657,4 +709,4 @@
             if (radioLainnya.checked) showMap();
         });
     </script>
-@endsection 
+@endsection

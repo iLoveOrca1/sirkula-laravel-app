@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config('app.name', 'Sirkula') }} | Sirkular Ekonomi Limbah</title>
 
-    <!-- Konfigurasi Font (IBM Plex Mono & Sans) bawaan dari struktur teman Anda -->
+    <!-- Konfigurasi Font (IBM Plex Mono & Sans) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -20,15 +20,126 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- Alpine.js -->
+    <!-- Alpine.js v3 -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- ============================================================ -->
+    <!-- CUSTOM CSS: PURE SIRKULA LOGO ANIMATION (BIG & CLEAN)        -->
+    <!-- ============================================================ -->
+    <style>
+        /* Transisi Fade In/Out Layar Loading */
+        #sirkula-loader {
+            transition: opacity 0.35s ease-out, visibility 0.35s ease-out;
+        }
+        #sirkula-loader.loader-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #sirkula-loader.loader-visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Putaran Dinamis Logo Utama (Berirama & Berdenyut) */
+        @keyframes sirkulaPureSpin {
+            0% {
+                transform: rotate(0deg) scale(0.92);
+            }
+            50% {
+                transform: rotate(180deg) scale(1.08);
+            }
+            100% {
+                transform: rotate(360deg) scale(0.92);
+            }
+        }
+
+        /* Denyut Gelombang Berurutan pada Tiap Elemen Logo (Tetap Presisi & Utuh) */
+        @keyframes elementPulseFlow {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+                filter: drop-shadow(0 8px 16px rgba(9, 58, 37, 0.14));
+            }
+            40% {
+                opacity: 0.35;
+                transform: scale(0.94);
+                filter: drop-shadow(0 2px 4px rgba(9, 58, 37, 0.05));
+            }
+            75% {
+                opacity: 1;
+                transform: scale(1.04);
+                filter: drop-shadow(0 12px 24px rgba(9, 58, 37, 0.22));
+            }
+        }
+
+        .sirkula-pure-logo {
+            animation: sirkulaPureSpin 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        }
+
+        .pure-el-1 {
+            animation: elementPulseFlow 2s ease-in-out infinite;
+            animation-delay: 0s;
+        }
+        .pure-el-3 {
+            animation: elementPulseFlow 2s ease-in-out infinite;
+            animation-delay: 0.25s;
+        }
+        .pure-el-4 {
+            animation: elementPulseFlow 2s ease-in-out infinite;
+            animation-delay: 0.5s;
+        }
+        .pure-el-2 {
+            animation: elementPulseFlow 2s ease-in-out infinite;
+            animation-delay: 0.75s;
+        }
+    </style>
 </head>
 
 <body class="bg-[#F6FBF5] text-[#414943] font-sans antialiased">
 
+    <!-- ============================================================ -->
+    <!-- GLOBAL LOADING PAGE (Murni Logo Sirkula Ukuran Besar)        -->
+    <!-- ============================================================ -->
+    <div id="sirkula-loader" class="loader-visible fixed inset-0 z-[99999] flex items-center justify-center bg-[#F6FBF5]/90 backdrop-blur-md select-none">
+        
+        <!-- Kontainer Logo Ukuran Besar -->
+        <div class="sirkula-pure-logo relative w-40 h-40 sm:w-48 sm:h-48">
+            <!-- Elemen 1: Hijau Kiri Bawah -->
+            <img 
+                src="{{ asset('storage/images/elemen-1.png') }}" 
+                onerror="this.onerror=null; this.src='{{ asset('images/elemen-1.png') }}';"
+                alt="" 
+                class="pure-el-1 absolute inset-0 w-full h-full object-contain pointer-events-none"
+            >
+            <!-- Elemen 3: Oranye Kiri Bawah -->
+            <img 
+                src="{{ asset('storage/images/elemen-3.png') }}" 
+                onerror="this.onerror=null; this.src='{{ asset('images/elemen-3.png') }}';"
+                alt="" 
+                class="pure-el-3 absolute inset-0 w-full h-full object-contain pointer-events-none"
+            >
+            <!-- Elemen 4: Hijau Kanan Atas -->
+            <img 
+                src="{{ asset('storage/images/elemen-4.png') }}" 
+                onerror="this.onerror=null; this.src='{{ asset('images/elemen-4.png') }}';"
+                alt="" 
+                class="pure-el-4 absolute inset-0 w-full h-full object-contain pointer-events-none"
+            >
+            <!-- Elemen 2: Oranye Kanan Atas -->
+            <img 
+                src="{{ asset('storage/images/elemen-2.png') }}" 
+                onerror="this.onerror=null; this.src='{{ asset('images/elemen-2.png') }}';"
+                alt="" 
+                class="pure-el-2 absolute inset-0 w-full h-full object-contain pointer-events-none"
+            >
+        </div>
+
+    </div>
+
     @php
         // Logika Deteksi Halaman Aktif untuk Navigasi
-        // Tambahkan route 'pelajari' agar Beranda tetap bold!
         $isHome = request()->routeIs('home') || request()->is('/') || request()->routeIs('pelajari');
         $isPasar = request()->routeIs('pasar.*') || request()->routeIs('permintaan');
         $isAbout = request()->routeIs('about');
@@ -47,8 +158,9 @@
                 <!-- 1. Logo Desktop & Mobile -->
                 <div class="flex items-center shrink-0">
                     <a href="/" class="flex items-center gap-2.5">
-                        <!-- Path logo menyesuaikan dengan asset Anda -->
-                        <img src="{{ asset('storage/images/logo-sirkula.png') }}" alt="Logo Sirkula" class="h-8 w-auto">
+                        <img src="{{ asset('storage/images/logo-sirkula.png') }}" 
+                             onerror="this.onerror=null; this.src='{{ asset('images/logo-sirkula.png') }}';"
+                             alt="Logo Sirkula" class="h-8 w-auto">
                         <span class="text-xl font-semibold tracking-wide text-primary-500">SIRKULA</span>
                     </a>
                 </div>
@@ -78,7 +190,6 @@
                 <!-- 3. Tombol Aksi Kanan Desktop -->
                 <div class="hidden sm:flex sm:items-center sm:space-x-5 shrink-0">
                     @guest
-                        <!-- Jika Belum Login -->
                         <a href="{{ route('login') }}"
                             class="text-sm font-bold text-[#414943] hover:text-[#093A25] transition-colors">Masuk</a>
                         <a href="{{ route('register') }}"
@@ -88,7 +199,6 @@
                     @endguest
 
                     @auth
-                        <!-- Jika Sudah Login -->
                         <a href="{{ route('laporan.create') }}"
                             class="bg-[#1A4B36] hover:bg-[#093A25] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-sm">
                             Tambah Limbah
@@ -115,8 +225,7 @@
 
                                 <div class="px-5 py-3 border-b border-gray-50">
                                     <p class="text-sm font-bold text-[#093A25] truncate">{{ Auth::user()->name }}</p>
-                                    <p class="text-xs font-mono text-gray-500 mt-0.5 capitalize">{{ Auth::user()->role }}
-                                    </p>
+                                    <p class="text-xs font-mono text-gray-500 mt-0.5 capitalize">{{ Auth::user()->role }}</p>
                                 </div>
 
                                 <div class="py-1">
@@ -159,9 +268,7 @@
             </div>
         </div>
 
-        <!-- ============================================================ -->
-        <!-- MENU DROPDOWN MOBILE (Dinamis)                               -->
-        <!-- ============================================================ -->
+        <!-- MENU DROPDOWN MOBILE -->
         <div :class="{ 'block': open, 'hidden': !open }"
             class="sm:hidden hidden border-t border-[#EBEFEA] bg-white shadow-lg absolute w-full z-40" x-transition>
             <div class="pt-2 pb-3 space-y-1">
@@ -225,13 +332,93 @@
         </div>
     </nav>
 
-    <!-- Konten Utama Halaman (Slot / Yield) -->
+    <!-- Konten Utama Halaman -->
     <main>
         @yield('content')
     </main>
-
     <x-layouts.footer />
 
-</body>
+    <!-- ============================================================ -->
+    <!-- GLOBAL LOADING CONTROLLER (Semua Halaman & Semua Proses)     -->
+    <!-- ============================================================ -->
+    <script>
+        (function () {
+            const loader = document.getElementById('sirkula-loader');
 
+            function showLoader() {
+                if (!loader) return;
+                loader.classList.remove('loader-hidden');
+                loader.classList.add('loader-visible');
+            }
+
+            function hideLoader() {
+                if (!loader) return;
+                loader.classList.remove('loader-visible');
+                loader.classList.add('loader-hidden');
+            }
+
+            // Ekspos secara global agar bisa dipanggil manual dari script halaman lain bila perlu
+            window.SirkulaLoader = { show: showLoader, hide: hideLoader };
+
+            // 1. Sembunyikan loader setelah halaman selesai dimuat
+            window.addEventListener('DOMContentLoaded', function () {
+                setTimeout(hideLoader, 350);
+            });
+
+            // 2. Event Delegation untuk SEMUA klik link <a> (termasuk elemen dinamis)
+            document.addEventListener('click', function (e) {
+                const link = e.target.closest('a');
+                if (!link) return;
+
+                const href = link.getAttribute('href');
+                const target = link.getAttribute('target');
+
+                // Abaikan link kosong, anchor (#), javascript:, tab baru, download, atau klik modifier
+                if (
+                    !href ||
+                    href.startsWith('#') ||
+                    href.startsWith('javascript:') ||
+                    href.startsWith('mailto:') ||
+                    href.startsWith('tel:') ||
+                    target === '_blank' ||
+                    link.hasAttribute('download') ||
+                    link.hasAttribute('data-no-loader') ||
+                    e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0
+                ) {
+                    return;
+                }
+
+                // Abaikan jika link mengarah ke URL yang sama persis (kecuali jika ada query filter baru)
+                if (link.href === window.location.href && !link.href.includes('?')) {
+                    return;
+                }
+
+                e.preventDefault();
+                showLoader();
+
+                setTimeout(function () {
+                    window.location.href = link.href;
+                }, 380);
+            });
+
+            // 3. Event Delegation untuk SEMUA Form Submit (Login, Register, CRUD, Filter, Logout)
+            document.addEventListener('submit', function (e) {
+                const form = e.target;
+                if (!form || form.hasAttribute('data-no-loader')) return;
+                showLoader();
+            });
+
+            // 4. Tangani event browser unload & tombol Back/Forward (bfcache)
+            window.addEventListener('beforeunload', function () {
+                showLoader();
+            });
+
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted) {
+                    hideLoader();
+                }
+            });
+        })();
+    </script>
+</body>
 </html>

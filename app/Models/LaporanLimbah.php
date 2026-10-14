@@ -9,10 +9,8 @@ class LaporanLimbah extends Model
 {
     use HasFactory;
 
-    // Perbaiki nama tabel menjadi 'laporan_limbahs' sesuai migrasi
     protected $table = 'laporan_limbahs';
 
-    // Kolom-kolom yang diizinkan untuk diisi dari form (termasuk latitude & longitude)
     protected $fillable = [
         'mitra_id',
         'kategori_id',
@@ -23,17 +21,30 @@ class LaporanLimbah extends Model
         'tanggal_pencatatan',
         'status',
         'foto_limbah',
-        'latitude',   // <-- Ditambahkan agar bisa disimpan
-        'longitude',  // <-- Ditambahkan agar bisa disimpan
+        'latitude',
+        'longitude',
     ];
 
-    // Relasi balik: Laporan ini milik Mitra (User) siapa?
+    protected function casts(): array
+    {
+        return [
+            'tanggal_pencatatan' => 'date',
+        ];
+    }
+
+    // Relasi ke pemilik laporan (mitra)
     public function mitra()
     {
         return $this->belongsTo(User::class, 'mitra_id');
     }
 
-    // Relasi balik: Laporan ini masuk Kategori apa?
+    // Alias agar kode lama yang memanggil ->user tetap berjalan
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'mitra_id');
+    }
+
+    // Relasi ke kategori limbah
     public function kategori()
     {
         return $this->belongsTo(KategoriLimbah::class, 'kategori_id');

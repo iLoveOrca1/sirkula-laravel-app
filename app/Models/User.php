@@ -13,7 +13,7 @@ class User extends Authenticatable
 
     /**
      * Kolom yang diizinkan untuk diisi secara massal (Mass Assignment).
-     * Semua kolom yang disimpan oleh ProfileController::update() harus ada di sini,
+     * Semua kolom yang disimpan oleh ProfileController::update() atau Register harus ada di sini,
      * kalau tidak, nilainya akan dibuang diam-diam tanpa error.
      */
     protected $fillable = [
@@ -22,6 +22,7 @@ class User extends Authenticatable
         'password',
         'role',
         'nama_instansi',
+        'jenis_usaha',     // <-- Ditambahkan agar sesuai dengan form registrasi baru
         'no_whatsapp',
         'alamat_lengkap',
         'kelurahan',
@@ -49,7 +50,7 @@ class User extends Authenticatable
         ];
     }
 
-    // Relasi: Satu mitra memiliki banyak laporan limbah
+    // Relasi: Satu mitra memiliki banyak laporan limbah (menggunakan foreign key 'mitra_id')
     public function laporanLimbahs()
     {
         return $this->hasMany(LaporanLimbah::class, 'mitra_id');

@@ -9,6 +9,8 @@ class PermintaanMaterial extends Model
 {
     use HasFactory;
 
+    protected $table = 'permintaan_materials';
+
     protected $fillable = [
         'user_id',
         'nama_material',
@@ -21,9 +23,9 @@ class PermintaanMaterial extends Model
         'whatsapp',
     ];
 
-    // Relasi: Satu permintaan dimiliki oleh satu User
+    // Relasi: Permintaan material ini dibuat oleh User (Mitra/Pengepul) siapa?
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

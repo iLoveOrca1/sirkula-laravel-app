@@ -1,12 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    {{-- Font: Inter (teks) + IBM Plex Mono (label teknis), sama dengan halaman Edit Limbah --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .sirkula-font,
+        .sirkula-font input,
+        .sirkula-font select,
+        .sirkula-font textarea,
+        .sirkula-font button {
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+        }
+        .sirkula-font h1,
+        .sirkula-font h2,
+        .sirkula-font h3 { letter-spacing: -0.02em; }
+        .sirkula-font .font-mono {
+            font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+            letter-spacing: 0;
+        }
+    </style>
+
+<div class="sirkula-font max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
     <!-- Header Petugas -->
     <div class="bg-blue-600 rounded-xl shadow-md p-6 md:p-8 flex flex-col md:flex-row items-center justify-between text-white mb-8">
         <div>
-            <h2 class="text-2xl md:text-3xl font-bold flex items-center gap-2">
+            <h2 class="text-2xl md:text-3xl font-medium flex items-center gap-2">
                 <svg class="w-8 h-8 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
                 Panel Logistik Sirkula
             </h2>
@@ -14,7 +35,7 @@
         </div>
         <div class="mt-4 md:mt-0 text-right">
             <p class="text-sm text-blue-200">Petugas Aktif</p>
-            <p class="font-bold text-lg text-white">{{ $user->name }}</p>
+            <p class="font-medium text-lg text-white">{{ $user->name }}</p>
         </div>
     </div>
 
@@ -25,7 +46,7 @@
     @endif
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">Daftar Tugas Penjemputan</h3>
+        <h3 class="text-xl font-medium text-gray-800 mb-4">Daftar Tugas Penjemputan</h3>
         
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -45,16 +66,16 @@
                                 <span class="text-xs text-gray-500 font-normal">Hubungi: {{ $item->mitra->email ?? '-' }}</span>
                             </td>
                             <td class="py-3 px-4 whitespace-nowrap">
-                                <span class="font-bold text-gray-800">{{ $item->judul }}</span> <br>
-                                <span class="font-medium text-blue-600">{{ $item->estimasi_volume }} {{ $item->satuan }}</span>
+                                <span class="font-medium text-gray-800">{{ $item->judul }}</span> <br>
+                                <span class="font-mono text-[13px] font-medium text-blue-600">{{ $item->estimasi_volume }} {{ $item->satuan }}</span>
                             </td>
                             <td class="py-3 px-4 whitespace-nowrap">
                                 @if(strtolower($item->status) == 'tersedia')
-                                    <span class="px-2.5 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full border border-green-200">Menunggu Jemputan</span>
+                                    <span class="px-2.5 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full border border-green-200">Menunggu Jemputan</span>
                                 @elseif(strtolower($item->status) == 'sedang dijemput')
-                                    <span class="px-2.5 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded-full border border-blue-200 animate-pulse">🚗 Sedang Dijemput</span>
+                                    <span class="px-2.5 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full border border-blue-200 animate-pulse">🚗 Sedang Dijemput</span>
                                 @elseif(strtolower($item->status) == 'selesai')
-                                    <span class="px-2.5 py-1 text-xs font-semibold bg-gray-100 text-gray-700 rounded-full border border-gray-200">✅ Selesai</span>
+                                    <span class="px-2.5 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full border border-gray-200">✅ Selesai</span>
                                 @endif
                             </td>
                             <td class="py-3 px-4 whitespace-nowrap text-center flex justify-center">
@@ -62,7 +83,7 @@
                                     <form action="{{ route('petugas.update_status', $item->id) }}" method="POST">
                                         @csrf @method('PUT')
                                         <input type="hidden" name="status" value="Sedang Dijemput">
-                                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm">
+                                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium px-4 py-2 rounded-lg transition shadow-sm">
                                             Ambil Tugas
                                         </button>
                                     </form>
@@ -70,7 +91,7 @@
                                     <form action="{{ route('petugas.update_status', $item->id) }}" method="POST">
                                         @csrf @method('PUT')
                                         <input type="hidden" name="status" value="Selesai">
-                                        <button type="submit" class="bg-gray-800 hover:bg-gray-900 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm">
+                                        <button type="submit" class="bg-gray-800 hover:bg-gray-900 text-white text-xs font-medium px-4 py-2 rounded-lg transition shadow-sm">
                                             Selesaikan
                                         </button>
                                     </form>

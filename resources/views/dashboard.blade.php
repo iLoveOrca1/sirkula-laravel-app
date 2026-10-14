@@ -26,21 +26,21 @@
 
         $sortIcon = function (string $col) use ($sort, $dir) {
             if ($sort !== $col) {
-                return '<span class="text-gray-300 ml-1">&#8645;</span>';
+                return '<span class="ml-1 text-[#B5BFB7]">&#8645;</span>';
             }
             return $dir === 'asc'
-                ? '<span class="text-[#093A25] ml-1">&#9650;</span>'
-                : '<span class="text-[#093A25] ml-1">&#9660;</span>';
+                ? '<span class="ml-1 text-[#093A25]">&#9650;</span>'
+                : '<span class="ml-1 text-[#093A25]">&#9660;</span>';
         };
 
         $statusMeta = function (?string $raw) {
             return match (strtolower((string) $raw)) {
-                'tersedia' => ['bg-[#C6ECCD] text-[#093A25]', 'Tersedia'],
-                'sedang diproses' => ['bg-[#FDECE8] text-[#C4411E]', 'Sedang Diproses'],
-                'sudah diambil' => ['bg-[#EBEFEA] text-[#414943]', 'Sudah Diambil'],
-                'menunggu' => ['bg-[#FDECE8] text-[#C4411E]', 'Menunggu'],
-                'ditolak' => ['bg-red-100 text-red-800', 'Ditolak'],
-                default => ['bg-gray-100 text-gray-700', ucfirst((string) $raw)],
+                'tersedia' => ['bg-[#C6ECCD] text-[#1E5638]', 'Tersedia'],
+                'sedang diproses' => ['bg-[#FFE1D9] text-[#C4411E]', 'Sedang Diproses'],
+                'sudah diambil' => ['bg-[#E9EEE8] text-[#5F6B63]', 'Sudah Diambil'],
+                'menunggu' => ['bg-[#FFF1D6] text-[#9A6A00]', 'Menunggu'],
+                'ditolak' => ['bg-[#FDE3E3] text-[#B42318]', 'Ditolak'],
+                default => ['bg-[#E9EEE8] text-[#5F6B63]', ucfirst((string) $raw)],
             };
         };
 
@@ -67,32 +67,80 @@
         $adaFilter = $q || $statusKey || $kategoriId;
     @endphp
 
-    <div class="bg-[#F6FBF5] min-h-screen font-sans pb-20 pt-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {{-- Font sesuai Figma: Plus Jakarta Sans (UI/judul) & IBM Plex Mono (label/angka) --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    @verbatim
+        <style>
+            .sirkula-dash {
+                --f-ui: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+                --f-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+                --c-ink: #093A25;
+                --c-forest: #23533D;
+                --c-body: #414943;
+                --c-muted: #5F6B63;
+                --c-soft: #F1F5F1;
+                --c-chip: #E9EEE8;
+                --c-line: #E6ECE6;
+
+                font-family: var(--f-ui);
+                color: var(--c-body);
+            }
+
+            .sirkula-dash .font-mono {
+                font-family: var(--f-mono);
+            }
+
+            .sirkula-dash h1,
+            .sirkula-dash h2,
+            .sirkula-dash h3,
+            .sirkula-dash h4 {
+                font-family: var(--f-ui);
+                letter-spacing: -0.015em;
+            }
+
+            .sirkula-dash .shadow-card {
+                box-shadow: 0 1px 2px rgba(9, 58, 37, .04), 0 6px 20px rgba(9, 58, 37, .06);
+            }
+
+            .sirkula-dash dialog {
+                font-family: var(--f-ui);
+            }
+        </style>
+    @endverbatim
+
+    <div class="sirkula-dash min-h-screen bg-[#F6FBF5] pb-20 pt-10">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
             <!-- ============================================================ -->
             <!-- 1. HEADER WELCOME & TOMBOL TAMBAH                            -->
             <!-- ============================================================ -->
-            <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
+            <div class="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-start">
                 <div>
                     <div
-                        class="inline-flex items-center gap-2 px-3 py-1 bg-[#EBEFEA] text-[#414943] rounded-full text-[10px] font-bold uppercase tracking-wider mb-4">
-                        <span class="w-2 h-2 rounded-full bg-[#093A25]"></span>
+                        class="mb-4 inline-flex items-center gap-2 rounded-full bg-[#E9EEE8] px-3 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.08em] text-[#414943]">
+                        <span class="h-1.5 w-1.5 rounded-full bg-[#093A25]"></span>
                         Portal Mitra Terverifikasi &bull; ID: {{ $mitraId }}
                     </div>
-                    <h1 class="text-3xl md:text-[34px] leading-tight font-bold text-[#093A25] tracking-tight">
+                    <h1 class="text-3xl font-semibold leading-tight text-[#093A25] md:text-[34px]">
                         Selamat datang kembali, {{ $namaInstansi }}
                     </h1>
-                    <p class="mt-2 text-sm text-[#414943] max-w-2xl leading-relaxed">
+                    <p class="mt-2 max-w-2xl text-sm leading-relaxed text-[#414943]">
                         Kelola inventaris limbah bernilai sirkular Anda dan perbarui status ketersediaan secara berkala demi
                         akurasi mitra pendaur ulang.
                     </p>
                 </div>
-                <div class="shrink-0 mt-2 md:mt-0">
+                <div class="mt-2 shrink-0 md:mt-0">
                     <a href="{{ route('laporan.create') }}"
-                        class="inline-flex items-center gap-2 bg-[#093A25] text-white px-5 py-3 rounded-xl text-sm font-semibold hover:bg-[#1A4B36] transition-colors shadow-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        class="inline-flex items-center gap-2 rounded-lg bg-[#23533D] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#093A25]">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m-4-4h8" />
                         </svg>
                         Tambah Limbah Baru
                     </a>
@@ -102,25 +150,25 @@
             <!-- ============================================================ -->
             <!-- 2. KARTU STATISTIK (4 GRID)                                  -->
             <!-- ============================================================ -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <!-- Total Material -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#EBEFEA] flex flex-col justify-between h-40">
-                    <div class="flex items-start justify-between text-gray-500">
-                        <p class="text-[11px] font-semibold uppercase tracking-wider">Total Material Terdaftar</p>
-                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.8"
+                <div class="flex min-h-[160px] flex-col justify-between rounded-xl bg-white p-6 shadow-card">
+                    <div class="flex items-start justify-between">
+                        <p class="text-[13px] text-[#414943]">Total Material Terdaftar</p>
+                        <svg class="h-5 w-5 text-[#5F6B63]" fill="none" stroke="currentColor" stroke-width="1.6"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                d="M4 7h16M5 7v11a2 2 0 002 2h10a2 2 0 002-2V7M4 7l1.5-3h13L20 7M10 12h4" />
                         </svg>
                     </div>
                     <div>
-                        <div class="flex items-baseline gap-2 mt-2">
+                        <div class="mt-3 flex items-baseline gap-2">
                             <span
-                                class="text-4xl font-extrabold text-[#093A25] font-mono">{{ str_pad($counts['semua'], 2, '0', STR_PAD_LEFT) }}</span>
-                            <span class="text-xs text-gray-500 font-medium">Stream Material</span>
+                                class="font-mono text-[44px] font-semibold leading-none text-[#093A25]">{{ str_pad($counts['semua'], 2, '0', STR_PAD_LEFT) }}</span>
+                            <span class="text-[13px] text-[#414943]">Stream Material</span>
                         </div>
-                        <p class="mt-2 text-[10px] text-[#414943] flex items-center gap-1 font-mono">
-                            <svg class="w-3 h-3 text-[#093A25]" fill="none" stroke="currentColor" stroke-width="3"
+                        <p class="mt-3 flex items-center gap-1.5 font-mono text-[10px] text-[#414943]">
+                            <svg class="h-3 w-3 text-[#23533D]" fill="none" stroke="currentColor" stroke-width="2.5"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
@@ -130,21 +178,20 @@
                 </div>
 
                 <!-- Status Tersedia -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#EBEFEA] flex flex-col justify-between h-40">
+                <div class="flex min-h-[160px] flex-col justify-between rounded-xl bg-white p-6 shadow-card">
                     <div class="flex items-start justify-between">
-                        <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Status Tersedia</p>
+                        <p class="text-[13px] text-[#414943]">Status Tersedia</p>
                         <span
-                            class="text-[10px] font-bold bg-[#C6ECCD] text-[#093A25] px-2.5 py-0.5 rounded-full uppercase tracking-wider">Tersedia</span>
+                            class="rounded-md bg-[#C6ECCD] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#1E5638]">Tersedia</span>
                     </div>
                     <div>
-                        <div class="flex items-baseline gap-2 mt-2">
+                        <div class="mt-3 flex items-baseline gap-2">
                             <span
-                                class="text-4xl font-extrabold text-[#093A25] font-mono">{{ str_pad($counts['tersedia'], 2, '0', STR_PAD_LEFT) }}</span>
-                            <span class="text-xs text-gray-500 font-medium">Siap Diambil</span>
+                                class="font-mono text-[44px] font-semibold leading-none text-[#093A25]">{{ str_pad($counts['tersedia'], 2, '0', STR_PAD_LEFT) }}</span>
+                            <span class="text-[13px] text-[#414943]">Siap Diambil</span>
                         </div>
-                        <p class="mt-2 text-[10px] text-gray-400 flex items-center gap-1 font-mono">
-                            <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
+                        <p class="mt-3 flex items-center gap-1.5 font-mono text-[10px] text-[#5F6B63]">
+                            <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -155,21 +202,20 @@
                 </div>
 
                 <!-- Sedang Diproses -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#EBEFEA] flex flex-col justify-between h-40">
+                <div class="flex min-h-[160px] flex-col justify-between rounded-xl bg-white p-6 shadow-card">
                     <div class="flex items-start justify-between">
-                        <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Sedang Diproses</p>
+                        <p class="text-[13px] text-[#414943]">Sedang Diproses</p>
                         <span
-                            class="text-[10px] font-bold bg-[#FDECE8] text-[#C4411E] px-2.5 py-0.5 rounded-full uppercase tracking-wider">Pick-up</span>
+                            class="rounded-md bg-[#FFE1D9] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#C4411E]">Pick-up</span>
                     </div>
                     <div>
-                        <div class="flex items-baseline gap-2 mt-2">
+                        <div class="mt-3 flex items-baseline gap-2">
                             <span
-                                class="text-4xl font-extrabold text-[#C4411E] font-mono">{{ str_pad($counts['diproses'], 2, '0', STR_PAD_LEFT) }}</span>
-                            <span class="text-xs text-gray-500 font-medium">Menunggu Pick-up</span>
+                                class="font-mono text-[44px] font-semibold leading-none text-[#9A3A1B]">{{ str_pad($counts['diproses'], 2, '0', STR_PAD_LEFT) }}</span>
+                            <span class="text-[13px] text-[#414943]">Menunggu Pick-up</span>
                         </div>
-                        <p class="mt-2 text-[10px] text-[#C4411E] flex items-center gap-1 font-mono">
-                            <svg class="w-3 h-3 text-[#C4411E]" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
+                        <p class="mt-3 flex items-center gap-1.5 font-mono text-[10px] text-[#C4411E]">
+                            <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -179,20 +225,20 @@
                 </div>
 
                 <!-- Sirkulasi Sukses -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#EBEFEA] flex flex-col justify-between h-40">
+                <div class="flex min-h-[160px] flex-col justify-between rounded-xl bg-white p-6 shadow-card">
                     <div class="flex items-start justify-between">
-                        <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Sirkulasi Sukses</p>
+                        <p class="text-[13px] text-[#414943]">Sirkulasi Sukses</p>
                         <span
-                            class="text-[10px] font-bold bg-[#EBEFEA] text-[#414943] px-2.5 py-0.5 rounded-full uppercase tracking-wider">Selesai</span>
+                            class="rounded-md bg-[#E9EEE8] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#5F6B63]">Selesai</span>
                     </div>
                     <div>
-                        <div class="flex items-baseline gap-2 mt-2">
+                        <div class="mt-3 flex items-baseline gap-2">
                             <span
-                                class="text-4xl font-extrabold text-[#093A25] font-mono">{{ str_pad($counts['diambil'] ?? 2, 2, '0', STR_PAD_LEFT) }}</span>
-                            <span class="text-xs text-gray-500 font-medium">Batch Bulan Ini</span>
+                                class="font-mono text-[44px] font-semibold leading-none text-[#093A25]">{{ str_pad($counts['diambil'] ?? 2, 2, '0', STR_PAD_LEFT) }}</span>
+                            <span class="text-[13px] text-[#414943]">Batch Bulan Ini</span>
                         </div>
-                        <p class="mt-2 text-[10px] text-[#414943] flex items-center gap-1 font-mono">
-                            <svg class="w-3 h-3 text-green-600" fill="none" stroke="currentColor" stroke-width="2"
+                        <p class="mt-3 flex items-center gap-1.5 font-mono text-[10px] text-[#414943]">
+                            <svg class="h-3 w-3 text-[#23533D]" fill="none" stroke="currentColor" stroke-width="2"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M5 19c0-8 5-13 14-14 0 9-5 14-14 14zM5 19l7-7" />
@@ -206,21 +252,21 @@
             <!-- ============================================================ -->
             <!-- 3. BANNER PROTOKOL REAL-TIME                                 -->
             <!-- ============================================================ -->
-            <div class="bg-[#F0F5F0] border border-[#EBEFEA] rounded-2xl p-5 mb-12 flex items-start gap-4 shadow-sm">
-                <div class="bg-white p-2.5 rounded-xl shadow-sm text-[#093A25] shrink-0 mt-0.5">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <div class="mb-6 flex items-start gap-4 rounded-xl border border-[#E3E9E3] bg-[#F1F5F1] p-5">
+                <div class="mt-0.5 shrink-0 rounded-lg bg-white p-2.5 text-[#093A25] shadow-sm">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
                 </div>
                 <div>
-                    <h4 class="font-bold text-[#093A25] flex items-center gap-2">
+                    <h4 class="flex flex-wrap items-center gap-2 text-[15px] font-semibold text-[#093A25]">
                         Protokol Pembaruan Status Real-Time
                         <span
-                            class="bg-[#EBEFEA] text-gray-600 text-[9px] font-mono px-2 py-0.5 rounded uppercase tracking-wider font-bold">SOP
+                            class="rounded bg-[#E3E9E3] px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-[#5F6B63]">SOP
                             Sirkula</span>
                     </h4>
-                    <p class="text-xs text-[#414943] mt-1.5 leading-relaxed pr-4">
+                    <p class="mt-1.5 pr-4 text-xs leading-relaxed text-[#414943]">
                         Selalu perbarui status limbah menjadi 'Sedang Diproses' saat recycler telah menghubungi Anda via
                         WhatsApp atau instrumen logistik. Ganti ke 'Sudah Diambil' seketika armada mitra menyelesaikan
                         pemuatan di dok muat agar data telemetri sirkular tetap presisi.
@@ -228,80 +274,93 @@
                 </div>
             </div>
 
-            <!-- Card Menu: Permintaan Material -->
+            <!-- ============================================================ -->
+            <!-- 3b. KARTU MENU: PERMINTAAN MATERIAL (layout horizontal)      -->
+            <!-- ============================================================ -->
             <a href="{{ route('permintaan.dashboard') }}"
-                class="group flex flex-col bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-[#EBEFEA] transition-all hover:-translate-y-1 hover:shadow-md">
+                class="group mb-12 flex flex-col gap-5 rounded-xl bg-white p-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-lg sm:flex-row sm:items-center sm:p-6">
                 <div
-                    class="w-14 h-14 rounded-2xl bg-[#F0F5F0] text-[#093A25] flex items-center justify-center mb-6 transition-colors group-hover:bg-[#093A25] group-hover:text-white border border-[#EBEFEA]">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#E9EEE8] text-[#093A25] transition-colors group-hover:bg-[#23533D] group-hover:text-white">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                     </svg>
                 </div>
-                <h3 class="text-xl font-bold text-[#093A25] mb-2">Permintaan Material</h3>
-                <p class="text-sm text-[#414943] leading-relaxed mb-6 flex-1">
-                    Lihat daftar kebutuhan material dari recycler dan industri. Hubungi mereka jika Anda memiliki pasokan
-                    yang sesuai.
-                </p>
-                <div class="mt-auto flex items-center text-sm font-bold text-[#1A4B36] group-hover:text-[#093A25]">
-                    Lihat Daftar Permintaan <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1"
-                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+
+                <div class="min-w-0 flex-1">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <h3 class="text-base font-semibold text-[#093A25]">Permintaan Material</h3>
+                        <span
+                            class="rounded bg-[#E9EEE8] px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-[#5F6B63]">Kebutuhan
+                            Recycler</span>
+                    </div>
+                    <p class="mt-1 max-w-2xl text-[13px] leading-relaxed text-[#414943]">
+                        Lihat daftar kebutuhan material dari recycler dan industri. Hubungi mereka jika Anda memiliki
+                        pasokan yang sesuai.
+                    </p>
+                </div>
+
+                <span
+                    class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#E9EEE8] px-4 py-2.5 text-[13px] font-semibold text-[#093A25] transition-colors group-hover:bg-[#23533D] group-hover:text-white">
+                    Lihat Daftar Permintaan
+                    <svg class="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none"
+                        stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
-                </div>
+                </span>
             </a>
 
             <!-- ============================================================ -->
             <!-- 4. LIMBAH SAYA (TABEL, SEARCH, FILTER)                       -->
             <!-- ============================================================ -->
-            <div id="tabel-riwayat" class="scroll-mt-10">
+            <div id="tabel-riwayat" class="scroll-mt-24">
 
                 <!-- Title & Tabs -->
-                <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-5">
+                <div class="mb-5 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
                     <div>
-                        <h2 class="text-2xl font-bold text-[#093A25]">Limbah Saya</h2>
-                        <p class="text-xs text-gray-500 mt-1">Inventaris aliran material terdaftar di area
+                        <h2 class="text-2xl font-semibold text-[#093A25]">Limbah Saya</h2>
+                        <p class="mt-1 text-xs text-[#414943]">Inventaris aliran material terdaftar di area
                             {{ $namaInstansi }}</p>
                     </div>
 
                     <!-- Tab Filter Status -->
-                    <div class="inline-flex bg-[#EBEFEA] rounded-xl p-1 gap-1">
+                    <div class="inline-flex flex-wrap gap-1 rounded-xl bg-[#E9EEE8] p-1">
                         @foreach ($tabs as $key => [$label, $jumlah])
                             @php $aktif = ($statusKey ?? '') === (string) $key; @endphp
                             <a href="{{ $url(['status' => $key === '' ? null : $key]) }}"
-                                class="px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5
-                                      {{ $aktif ? 'bg-white text-[#093A25] shadow-sm' : 'text-gray-600 hover:text-black' }}">
+                                class="flex items-center gap-1.5 rounded-lg px-4 py-2 text-[13px] font-medium transition-all duration-200
+                                      {{ $aktif ? 'bg-white text-[#093A25] shadow-[0_1px_4px_rgba(9,58,37,0.12)]' : 'text-[#414943] hover:text-[#093A25]' }}">
                                 {{ $label }}
-                                <span class="text-[10px] font-mono text-gray-400">({{ $jumlah }})</span>
+                                <span
+                                    class="font-mono text-[10px] {{ $key === 'diproses' ? 'text-[#C4411E]' : 'text-[#5F6B63]' }}">({{ $jumlah }})</span>
                             </a>
                         @endforeach
                     </div>
                 </div>
 
                 <!-- Search Bar & Table Container -->
-                <div class="bg-white rounded-2xl border border-[#EBEFEA] shadow-sm mb-12">
+                <div class="mb-12 rounded-xl bg-white shadow-card">
 
                     <!-- Search Header -->
                     <form method="GET" action="{{ route('laporan.index') }}"
-                        class="p-4 border-b border-[#EBEFEA] flex flex-col sm:flex-row items-center gap-3">
+                        class="flex flex-col items-center gap-3 p-4 sm:flex-row">
                         <input type="hidden" name="status" value="{{ $statusKey }}">
                         <input type="hidden" name="sort" value="{{ $sort }}">
                         <input type="hidden" name="dir" value="{{ $dir }}">
 
                         <div class="relative w-full sm:max-w-md">
-                            <svg class="absolute left-4 top-3 w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                stroke-width="2" viewBox="0 0 24 24">
+                            <svg class="absolute left-4 top-3 h-4 w-4 text-[#5F6B63]" fill="none"
+                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                             <input type="text" name="q" value="{{ $q }}"
                                 placeholder="Cari limbah saya (e.g. Kardus, Minyak, Kaca)..."
-                                class="w-full pl-10 pr-4 py-2.5 text-xs bg-[#F6FBF5] border border-transparent rounded-xl focus:bg-white focus:ring-1 focus:ring-[#093A25] focus:border-[#093A25] outline-none transition-all">
+                                class="w-full rounded-lg border border-transparent bg-[#F1F5F1] py-2.5 pl-10 pr-4 text-xs text-[#18221C] outline-none transition-all placeholder:text-[#7F8B83] focus:border-[#23533D] focus:bg-white focus:ring-2 focus:ring-[#23533D]/15">
                         </div>
 
-                        <!-- Dropdown Filter Kategori (Diperbaiki) -->
                         <select name="kategori" onchange="this.form.submit()"
-                            class="w-full sm:w-auto px-4 py-2.5 text-xs bg-[#F6FBF5] border border-transparent rounded-xl focus:bg-white focus:ring-1 focus:ring-[#093A25] focus:border-[#093A25] outline-none transition-all cursor-pointer">
+                            class="w-full cursor-pointer rounded-lg border border-transparent bg-[#F1F5F1] px-4 py-2.5 text-xs text-[#18221C] outline-none transition-all focus:border-[#23533D] focus:bg-white focus:ring-2 focus:ring-[#23533D]/15 sm:w-auto">
                             <option value="">Semua Kategori</option>
                             @foreach ($kategoriList->unique('nama_kategori') as $kat)
                                 <option value="{{ $kat->id }}"
@@ -312,24 +371,24 @@
                         </select>
 
                         <div
-                            class="sm:ml-auto text-[10px] font-mono text-gray-400 uppercase tracking-widest font-semibold flex items-center gap-4">
+                            class="flex items-center gap-4 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-[#7F8B83] sm:ml-auto">
                             @if ($adaFilter)
                                 <a href="{{ route('laporan.index') }}#tabel-riwayat"
-                                    class="hover:text-[#093A25] hover:underline">Reset Filter</a>
+                                    class="text-[#23533D] hover:underline">Reset Filter</a>
                             @endif
-                            MENAMPILKAN {{ $laporan->total() }} BATCH AKTIF
+                            Menampilkan {{ $laporan->total() }} batch aktif
                         </div>
                     </form>
 
                     <!-- Notifikasi Alert -->
                     @if (session('success') || session('error'))
-                        <div class="p-4 border-b border-[#EBEFEA]">
+                        <div class="space-y-2 px-4 pb-4">
                             @if (session('success'))
-                                <div class="bg-green-50 text-[#093A25] p-3 rounded-lg text-xs font-semibold">
+                                <div class="rounded-lg bg-[#E8F6EB] p-3 text-xs font-semibold text-[#093A25]">
                                     {{ session('success') }}</div>
                             @endif
                             @if (session('error'))
-                                <div class="bg-red-50 text-red-700 p-3 rounded-lg text-xs font-semibold">
+                                <div class="rounded-lg bg-[#FDEEEA] p-3 text-xs font-semibold text-[#9A2B12]">
                                     {{ session('error') }}</div>
                             @endif
                         </div>
@@ -337,41 +396,41 @@
 
                     <!-- The Table -->
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
+                        <table class="w-full border-collapse text-left">
                             <thead>
                                 <tr
-                                    class="bg-gray-50/50 text-[10px] font-bold text-gray-500 uppercase tracking-widest border-b border-[#EBEFEA]">
-                                    <th class="py-4 px-6 whitespace-nowrap">
+                                    class="bg-[#F1F5F1] font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-[#5F6B63]">
+                                    <th class="whitespace-nowrap px-6 py-4">
                                         <a href="{{ $sortUrl('judul') }}"
-                                            class="hover:text-black inline-flex items-center">MATERIAL &amp; FOTO
+                                            class="inline-flex items-center hover:text-[#093A25]">Material &amp; Foto
                                             {!! $sortIcon('judul') !!}</a>
                                     </th>
-                                    <th class="py-4 px-4 whitespace-nowrap">
+                                    <th class="whitespace-nowrap px-4 py-4">
                                         <a href="{{ $sortUrl('kategori') }}"
-                                            class="hover:text-black inline-flex items-center">KATEGORI
+                                            class="inline-flex items-center hover:text-[#093A25]">Kategori
                                             {!! $sortIcon('kategori') !!}</a>
                                     </th>
-                                    <th class="py-4 px-4 whitespace-nowrap">
+                                    <th class="whitespace-nowrap px-4 py-4">
                                         <a href="{{ $sortUrl('volume') }}"
-                                            class="hover:text-black inline-flex items-center">VOLUME/MASSA
+                                            class="inline-flex items-center hover:text-[#093A25]">Volume/Massa
                                             {!! $sortIcon('volume') !!}</a>
                                     </th>
-                                    <th class="py-4 px-4 whitespace-nowrap">LOKASI PICK-UP</th>
-                                    <th class="py-4 px-4 whitespace-nowrap text-center">
+                                    <th class="whitespace-nowrap px-4 py-4">Lokasi Pick-up</th>
+                                    <th class="whitespace-nowrap px-4 py-4 text-center">
                                         <a href="{{ $sortUrl('status') }}"
-                                            class="hover:text-black inline-flex items-center justify-center">STATUS
-                                            KETERSEDIAAN {!! $sortIcon('status') !!}</a>
+                                            class="inline-flex items-center justify-center hover:text-[#093A25]">Status
+                                            Ketersediaan {!! $sortIcon('status') !!}</a>
                                     </th>
-                                    <th class="py-4 px-4 whitespace-nowrap">
+                                    <th class="whitespace-nowrap px-4 py-4">
                                         <a href="{{ $sortUrl('update') }}"
-                                            class="hover:text-black inline-flex items-center">UPDATE TERAKHIR
+                                            class="inline-flex items-center hover:text-[#093A25]">Update Terakhir
                                             {!! $sortIcon('update') !!}</a>
                                     </th>
-                                    <th class="py-4 px-4 whitespace-nowrap text-center">MANAJEMEN</th>
-                                    <th class="py-4 px-6 whitespace-nowrap text-center">AKSI</th>
+                                    <th class="whitespace-nowrap px-4 py-4 text-center">Manajemen</th>
+                                    <th class="whitespace-nowrap px-6 py-4 text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-xs text-[#414943] divide-y divide-[#EBEFEA]">
+                            <tbody class="divide-y divide-[#EEF2EE] text-xs text-[#414943]">
                                 @forelse ($laporan as $item)
                                     @php
                                         $st = strtolower((string) $item->status);
@@ -382,10 +441,10 @@
                                         $katName = $item->kategori->nama_kategori ?? 'Umum';
                                         $katLower = strtolower($katName);
                                         $dot = str_contains($katLower, 'anorganik')
-                                            ? 'bg-gray-500'
+                                            ? 'bg-[#5F6B63]'
                                             : (str_contains($katLower, 'organik')
                                                 ? 'bg-[#C4411E]'
-                                                : 'bg-gray-400');
+                                                : 'bg-[#8A968E]');
 
                                         $sku =
                                             'CRD-' .
@@ -397,71 +456,71 @@
                                         $tglUpdate = $item->updated_at?->locale('id')->translatedFormat('d M Y');
                                         $jamUpdate = $item->updated_at?->format('H:i');
                                     @endphp
-                                    <tr class="hover:bg-gray-50/60 transition-colors">
+                                    <tr class="transition-colors hover:bg-[#FAFCFA]">
                                         <!-- Foto & Material -->
-                                        <td class="py-4 px-6">
-                                            <div class="flex items-center gap-3 w-max">
+                                        <td class="px-6 py-4">
+                                            <div class="flex w-max items-center gap-3">
                                                 @if ($item->foto_limbah)
                                                     <img src="{{ asset('storage/' . $item->foto_limbah) }}"
                                                         alt="Foto"
-                                                        class="h-12 w-12 object-cover rounded-xl border border-gray-200 shrink-0 shadow-sm">
+                                                        class="h-12 w-12 shrink-0 rounded-lg object-cover">
                                                 @else
                                                     <div
-                                                        class="h-12 w-12 bg-gray-100 rounded-xl border border-gray-200 flex items-center justify-center text-[9px] font-semibold text-gray-400 shrink-0">
+                                                        class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#E9EEE8] font-mono text-[9px] font-semibold text-[#8A968E]">
                                                         No IMG</div>
                                                 @endif
                                                 <div>
-                                                    <p class="font-bold text-[#093A25] text-[13px]">{{ $item->judul }}
-                                                    </p>
-                                                    <p class="mt-0.5 text-[10px] font-mono text-gray-500 tracking-wider">
+                                                    <p class="max-w-[200px] text-[14px] font-medium leading-snug text-[#093A25]">
+                                                        {{ $item->judul }}</p>
+                                                    <p class="mt-1 font-mono text-[10px] tracking-wide text-[#5F6B63]">
                                                         SKU: {{ $sku }}</p>
                                                 </div>
                                             </div>
                                         </td>
 
                                         <!-- Kategori -->
-                                        <td class="py-4 px-4 whitespace-nowrap">
+                                        <td class="whitespace-nowrap px-4 py-4">
                                             <div
-                                                class="inline-flex items-center gap-1.5 bg-[#F0F5F0] px-2.5 py-1 rounded-full border border-gray-100">
-                                                <span class="w-1.5 h-1.5 rounded-full {{ $dot }}"></span>
+                                                class="inline-flex items-center gap-1.5 rounded-full bg-[#E9EEE8] px-2.5 py-1">
+                                                <span class="h-1.5 w-1.5 rounded-full {{ $dot }}"></span>
                                                 <span
-                                                    class="text-[11px] font-mono font-semibold text-gray-600">{{ $katName }}</span>
+                                                    class="font-mono text-[10.5px] font-medium text-[#414943]">{{ $katName }}</span>
                                             </div>
                                         </td>
 
                                         <!-- Volume -->
-                                        <td class="py-4 px-4 whitespace-nowrap">
+                                        <td class="whitespace-nowrap px-4 py-4">
                                             <span
-                                                class="inline-flex bg-[#EBEFEA] text-[#093A25] font-mono font-bold text-xs px-2.5 py-1.5 rounded-lg tracking-wide">
+                                                class="inline-flex rounded-md bg-[#E9EEE8] px-2.5 py-1.5 font-mono text-xs font-semibold tracking-wide {{ $final ? 'text-[#8A968E]' : 'text-[#093A25]' }}">
                                                 {{ $volumeTeks }}
                                             </span>
                                         </td>
 
                                         <!-- Lokasi -->
-                                        <td class="py-4 px-4">
-                                            <div class="font-semibold text-gray-800 text-[13px]">Loading Dock Utama</div>
-                                            <div class="text-[10px] font-mono text-gray-500 mt-0.5 truncate max-w-[150px]">
+                                        <td class="px-4 py-4">
+                                            <div class="text-[13px] font-medium text-[#18221C]">Loading Dock Utama</div>
+                                            <div class="mt-0.5 max-w-[150px] truncate font-mono text-[10px] text-[#5F6B63]">
                                                 {{ $item->deskripsi ?: 'Akses Truk' }}</div>
                                         </td>
 
                                         <!-- Status -->
-                                        <td class="py-4 px-4 whitespace-nowrap text-center">
+                                        <td class="whitespace-nowrap px-4 py-4 text-center">
                                             <span
-                                                class="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full {{ $stClass }}">
+                                                class="inline-block rounded-full px-3 py-1 font-mono text-[10.5px] font-semibold {{ $stClass }}">
                                                 {{ $stLabel }}
                                             </span>
                                         </td>
 
                                         <!-- Tanggal -->
-                                        <td class="py-4 px-4 whitespace-nowrap">
-                                            <div class="text-[11px] font-mono text-gray-600">
+                                        <td class="whitespace-nowrap px-4 py-4">
+                                            <div class="font-mono text-[11px] leading-relaxed text-[#414943]">
                                                 {{ $tglUpdate ?? '-' }}<br>
-                                                <span class="text-gray-400">{{ $jamUpdate ?? '-' }}</span>
+                                                <span class="text-[#8A968E]">{{ $jamUpdate ?? '-' }}</span>
                                             </div>
                                         </td>
 
                                         <!-- Manajemen Btn -->
-                                        <td class="py-4 px-4 whitespace-nowrap text-center">
+                                        <td class="whitespace-nowrap px-4 py-4 text-center">
                                             @if ($bisaUbah)
                                                 <button type="button" data-open-dlg data-id="{{ $item->id }}"
                                                     data-judul="{{ $item->judul }}" data-sku="{{ $sku }}"
@@ -469,7 +528,7 @@
                                                     data-lokasi="Loading Dock Utama"
                                                     data-update="{{ $tglUpdate ? $tglUpdate . ', ' . $jamUpdate : '-' }}"
                                                     data-editable="1"
-                                                    class="bg-[#093A25] text-white text-xs font-semibold px-4 py-2 rounded-xl hover:bg-[#143B25] transition-colors shadow-sm">
+                                                    class="inline-block w-[72px] whitespace-normal rounded-lg bg-[#23533D] px-2 py-2 text-center text-xs font-semibold leading-tight text-white shadow-sm transition-colors hover:bg-[#093A25]">
                                                     Ubah Status
                                                 </button>
                                             @else
@@ -479,19 +538,19 @@
                                                     data-lokasi="Loading Dock Utama"
                                                     data-update="{{ $tglUpdate ? $tglUpdate . ', ' . $jamUpdate : '-' }}"
                                                     data-editable="0"
-                                                    class="bg-[#EBEFEA] text-[#414943] text-xs font-semibold px-4 py-2 rounded-xl hover:bg-gray-200 transition-colors">
+                                                    class="inline-block w-[72px] whitespace-normal rounded-lg bg-[#E9EEE8] px-2 py-2 text-center text-xs font-semibold leading-tight text-[#414943] transition-colors hover:bg-[#DCE5DC]">
                                                     Lihat Manifest
                                                 </button>
                                             @endif
                                         </td>
 
                                         <!-- Aksi -->
-                                        <td class="py-4 px-6 whitespace-nowrap">
-                                            <div class="flex items-center justify-center gap-3 text-gray-400">
+                                        <td class="whitespace-nowrap px-6 py-4">
+                                            <div class="flex items-center justify-center gap-3 text-[#5F6B63]">
                                                 @unless ($final)
                                                     <a href="{{ route('laporan.edit', $item->id) }}"
-                                                        class="hover:text-blue-600 transition-colors">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        class="transition-colors hover:text-[#23533D]" title="Edit">
+                                                        <svg class="h-4 w-4" fill="none" stroke="currentColor"
                                                             stroke-width="1.8" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                                 d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -501,8 +560,9 @@
                                                         onsubmit="return confirm('Hapus inventaris ini secara permanen?');">
                                                         @csrf @method('DELETE')
                                                         <button type="submit"
-                                                            class="hover:text-red-600 transition-colors block">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                            class="block transition-colors hover:text-[#C4411E]"
+                                                            title="Hapus">
+                                                            <svg class="h-4 w-4" fill="none" stroke="currentColor"
                                                                 stroke-width="1.8" viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -510,7 +570,7 @@
                                                         </button>
                                                     </form>
                                                 @else
-                                                    <span class="text-xs text-gray-300">-</span>
+                                                    <span class="text-xs text-[#C5CEC7]">-</span>
                                                 @endunless
                                             </div>
                                         </td>
@@ -519,16 +579,16 @@
                                     <tr>
                                         <td colspan="8" class="py-16 text-center">
                                             @if ($adaFilter)
-                                                <p class="text-gray-500 text-sm font-medium mb-2">Tidak ada batch yang
+                                                <p class="mb-2 text-sm font-medium text-[#5F6B63]">Tidak ada batch yang
                                                     cocok dengan pencarian Anda.</p>
                                                 <a href="{{ route('laporan.index') }}#tabel-riwayat"
-                                                    class="text-[#093A25] text-xs font-bold uppercase tracking-wider hover:underline">Reset
+                                                    class="font-mono text-xs font-semibold uppercase tracking-wider text-[#23533D] hover:underline">Reset
                                                     Filter</a>
                                             @else
-                                                <p class="text-gray-500 text-sm font-medium mb-2">Belum ada inventaris
+                                                <p class="mb-2 text-sm font-medium text-[#5F6B63]">Belum ada inventaris
                                                     limbah terdaftar.</p>
                                                 <a href="{{ route('laporan.create') }}"
-                                                    class="text-[#093A25] text-xs font-bold uppercase tracking-wider hover:underline">Mulai
+                                                    class="font-mono text-xs font-semibold uppercase tracking-wider text-[#23533D] hover:underline">Mulai
                                                     Tambah Limbah</a>
                                             @endif
                                         </td>
@@ -541,26 +601,25 @@
                     <!-- Footer Table (Pagination) -->
                     @if ($laporan->total() > 0)
                         <div
-                            class="px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-t border-[#EBEFEA] bg-white rounded-b-2xl">
-                            <p class="text-xs text-gray-500 italic">&ldquo;Transaksi dan pengambilan dilakukan langsung
+                            class="flex flex-col justify-between gap-4 rounded-b-xl bg-[#F1F5F1] px-6 py-4 md:flex-row md:items-center">
+                            <p class="text-xs italic text-[#414943]">&ldquo;Transaksi dan pengambilan dilakukan langsung
                                 dengan mitra pendaur ulang.&rdquo;</p>
-                            <div class="flex items-center gap-3 text-xs font-mono font-semibold">
+                            <div class="flex items-center gap-3 font-mono text-[11px] font-medium">
                                 @if ($laporan->onFirstPage())
-                                    <span class="text-gray-400 uppercase tracking-widest">Sebelumnya</span>
+                                    <span class="rounded-md bg-[#E9EEE8] px-3 py-1.5 text-[#A3ADA6]">Sebelumnya</span>
                                 @else
                                     <a href="{{ $laporan->previousPageUrl() }}"
-                                        class="text-[#093A25] hover:underline uppercase tracking-widest">Sebelumnya</a>
+                                        class="rounded-md bg-[#E9EEE8] px-3 py-1.5 text-[#093A25] hover:bg-[#DCE5DC]">Sebelumnya</a>
                                 @endif
 
-                                <span
-                                    class="bg-[#F0F5F0] px-3 py-1.5 rounded-md text-gray-700 tracking-widest uppercase">Hal
-                                    {{ $laporan->currentPage() }} dari {{ $laporan->lastPage() }}</span>
+                                <span class="font-semibold text-[#093A25]">Hal {{ $laporan->currentPage() }} dari
+                                    {{ $laporan->lastPage() }}</span>
 
                                 @if ($laporan->hasMorePages())
                                     <a href="{{ $laporan->nextPageUrl() }}"
-                                        class="text-[#093A25] hover:underline uppercase tracking-widest">Berikutnya</a>
+                                        class="rounded-md bg-[#E9EEE8] px-3 py-1.5 text-[#093A25] hover:bg-[#DCE5DC]">Berikutnya</a>
                                 @else
-                                    <span class="text-gray-400 uppercase tracking-widest">Berikutnya</span>
+                                    <span class="rounded-md bg-[#E9EEE8] px-3 py-1.5 text-[#A3ADA6]">Berikutnya</span>
                                 @endif
                             </div>
                         </div>
@@ -571,94 +630,58 @@
             <!-- ============================================================ -->
             <!-- 5. KINERJA DAMPAK & BANTUAN LOGISTIK                         -->
             <!-- ============================================================ -->
-            <div class="mb-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="mb-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
                 <!-- Box Kiri (Kinerja Dampak) -->
-                <div
-                    class="lg:col-span-2 bg-white rounded-3xl p-8 border border-[#EBEFEA] shadow-sm flex flex-col justify-center">
-                    <h3 class="flex items-center gap-2 font-bold text-[#093A25] mb-4">
-                        <svg class="w-5 h-5 text-[#093A25]" fill="none" stroke="currentColor" stroke-width="2"
+                <div class="flex flex-col justify-center rounded-xl bg-white p-8 shadow-card lg:col-span-2">
+                    <h3 class="mb-4 flex items-center gap-2 text-[15px] font-semibold text-[#093A25]">
+                        <svg class="h-5 w-5 text-[#23533D]" fill="none" stroke="currentColor" stroke-width="1.8"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                d="M5 19c0-8 5-13 14-14 0 9-5 14-14 14zM5 19l7-7" />
                         </svg>
                         Kinerja Dampak Sirkular {{ $namaInstansi }}
                     </h3>
-                    <p class="text-sm text-[#414943] leading-relaxed mb-6">
+                    <p class="mb-6 text-sm leading-relaxed text-[#414943]">
                         Pemberian status akurat pada inventaris limbah memastikan daur ulang tepat waktu, meminimalkan
                         dekomposisi organik anaerobik penghasil metana, dan menjamin material anorganik masuk ke fasilitas
                         daur ulang terakreditasi di Bali.
                     </p>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-2 gap-6 md:grid-cols-3">
                         <div>
-                            <div class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Estimasi CO₂e
-                                Terhindar</div>
-                            <div class="text-xl font-extrabold text-[#093A25] font-mono mt-1">
+                            <div class="font-mono text-[10px] font-medium uppercase tracking-[0.1em] text-[#5F6B63]">
+                                Estimasi CO₂e Terhindar</div>
+                            <div class="mt-1.5 font-mono text-xl font-semibold text-[#093A25]">
                                 {{ $dampak['massa'] ?? '2,410' }} KG CO₂e</div>
                         </div>
                         <div>
-                            <div class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Tingkat Residu TPA
-                            </div>
-                            <div class="text-xl font-extrabold text-[#414943] font-mono mt-1">&lt;
+                            <div class="font-mono text-[10px] font-medium uppercase tracking-[0.1em] text-[#5F6B63]">
+                                Tingkat Residu TPA</div>
+                            <div class="mt-1.5 font-mono text-xl font-semibold text-[#2F6B4F]">&lt;
                                 {{ $dampak['tingkat'] ?? '8.4' }}%</div>
                         </div>
                         <div>
-                            <div class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Mitra Daur Ulang
-                                Terhubung</div>
-                            <div class="text-xl font-extrabold text-[#093A25] font-mono mt-1">
+                            <div class="font-mono text-[10px] font-medium uppercase tracking-[0.1em] text-[#5F6B63]">
+                                Mitra Daur Ulang Terhubung</div>
+                            <div class="mt-1.5 font-mono text-xl font-semibold text-[#093A25]">
                                 {{ $dampak['total'] ?? '5' }} Recycler Aktif</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Box Kanan (Dukungan Logistik) -->
-                <div class="bg-[#F0F5F0] rounded-3xl p-8 flex flex-col justify-center shadow-sm">
-                    <h4 class="font-bold text-[#093A25] text-lg">Perlu Dukungan Logistik Tambahan?</h4>
-                    <p class="text-sm text-[#414943] mt-3 leading-relaxed mb-6">
+                <div class="flex flex-col justify-center rounded-xl bg-[#EEF3EE] p-8">
+                    <h4 class="text-lg font-semibold text-[#093A25]">Perlu Dukungan Logistik Tambahan?</h4>
+                    <p class="mb-6 mt-3 text-sm leading-relaxed text-[#414943]">
                         Hubungi koordinator penjemputan SIRKULA untuk jadwal khusus armada limbah skala besar (&gt;1 Ton).
                     </p>
                     <div>
                         <a href="mailto:{{ config('mail.from.address') }}"
-                            class="inline-flex items-center gap-2 text-sm font-bold text-[#093A25] hover:text-[#1A4B36] hover:underline">
+                            class="inline-flex items-center gap-2 text-sm font-semibold text-[#093A25] hover:text-[#23533D] hover:underline">
                             Kontak Tim Dukungan &rarr;
                         </a>
                     </div>
                 </div>
             </div>
-
-            <!-- ============================================================ -->
-            <!-- FOOTER SIMPLE AREA                                           -->
-            <!-- ============================================================ -->
-            {{-- <div class="pt-8 border-t border-[#EBEFEA] pb-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <!-- Penggunaan Logo Asset Baru -->
-                    <div class="mb-4">
-                        <img src="{{ asset('storage/images/logo-sirkula.png') }}" alt="Logo Sirkula" class="h-8 w-auto">
-                    </div>
-                    <p class="text-sm font-bold text-[#093A25] mt-1">Temukan. Hubungkan. Sirkulasikan.</p>
-                    <p class="text-xs text-[#414943] mt-3 leading-relaxed">
-                        Infrastruktur pertukaran dan koneksi informasi limbah sirkular untuk mitra industri, perhotelan, komersial, dan pendaur ulang.
-                    </p>
-                    <p class="text-xs text-gray-400 mt-6">&copy; {{ date('Y') }} SIRKULA. Hak cipta dilindungi undang-undang.</p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-[#093A25] text-sm mb-4">Eksplorasi</h4>
-                    <ul class="space-y-2 text-xs text-[#414943]">
-                        <li><a href="#" class="hover:text-[#093A25] hover:underline">Jelajahi Limbah</a></li>
-                        <li><a href="#" class="hover:text-[#093A25] hover:underline">Tentang SIRKULA</a></li>
-                        <li><a href="#" class="hover:text-[#093A25] hover:underline">Untuk Mitra</a></li>
-                        <li><a href="#" class="hover:text-[#093A25] hover:underline">Bantuan &amp; Panduan</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold text-[#093A25] text-sm mb-4">Pemberitahuan Sistem</h4>
-                    <div class="bg-[#EBEFEA] p-4 rounded-xl">
-                        <p class="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-wider mb-1">Protokol Transaksi</p>
-                        <p class="text-xs text-[#414943] italic leading-relaxed">
-                            "Transaksi dan kesepakatan pengambilan dilakukan langsung antara mitra dan recycler."
-                        </p>
-                    </div>
-                </div>
-            </div> --}}
 
         </div>
     </div>
@@ -666,30 +689,32 @@
     <!-- ================================================================ -->
     <!-- DIALOG: Ubah Status / Lihat Manifest                             -->
     <!-- ================================================================ -->
-    <dialog id="dlg-status" class="rounded-2xl p-0 w-full max-w-md shadow-2xl backdrop:bg-black/40">
-        <div class="p-6 bg-white">
+    <dialog id="dlg-status" class="w-full max-w-md rounded-2xl p-0 shadow-2xl backdrop:bg-[#093A25]/40">
+        <div class="bg-white p-6">
             <div class="flex items-start justify-between gap-4">
                 <div>
-                    <p id="dlg-title" class="text-[10px] font-mono uppercase tracking-wider text-gray-500 font-bold"></p>
-                    <h3 data-f="judul" class="mt-1 text-lg font-bold text-[#093A25]"></h3>
+                    <p id="dlg-title"
+                        class="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-[#5F6B63]"></p>
+                    <h3 data-f="judul" class="mt-1 text-lg font-semibold text-[#093A25]"></h3>
                 </div>
-                <button type="button" id="dlg-close" class="text-gray-400 hover:text-gray-700 text-2xl leading-none"
+                <button type="button" id="dlg-close" class="text-2xl leading-none text-[#8A968E] hover:text-[#093A25]"
                     aria-label="Tutup">&times;</button>
             </div>
 
             <dl class="mt-5 grid grid-cols-3 gap-y-3 text-xs">
-                <dt class="text-gray-500 font-mono">SKU</dt>
-                <dd data-f="sku" class="col-span-2 font-mono font-semibold text-gray-900"></dd>
-                <dt class="text-gray-500 font-mono">Volume</dt>
+                <dt class="font-mono text-[#5F6B63]">SKU</dt>
+                <dd data-f="sku" class="col-span-2 font-mono font-semibold text-[#18221C]"></dd>
+                <dt class="font-mono text-[#5F6B63]">Volume</dt>
                 <dd data-f="volume"
-                    class="col-span-2 font-mono font-semibold text-[#093A25] bg-[#EBEFEA] inline-block px-2 py-0.5 rounded w-max">
+                    class="col-span-2 inline-block w-max rounded bg-[#E9EEE8] px-2 py-0.5 font-mono font-semibold text-[#093A25]">
                 </dd>
-                <dt class="text-gray-500 font-mono mt-1">Lokasi</dt>
-                <dd data-f="lokasi" class="col-span-2 text-[#414943] mt-1"></dd>
-                <dt class="text-gray-500 font-mono">Update</dt>
-                <dd data-f="update" class="col-span-2 font-mono text-gray-600"></dd>
-                <dt class="text-gray-500 font-mono mt-1">Status</dt>
-                <dd data-f="status" class="col-span-2 font-bold text-gray-900 mt-1 uppercase tracking-wider text-[10px]">
+                <dt class="mt-1 font-mono text-[#5F6B63]">Lokasi</dt>
+                <dd data-f="lokasi" class="col-span-2 mt-1 text-[#414943]"></dd>
+                <dt class="font-mono text-[#5F6B63]">Update</dt>
+                <dd data-f="update" class="col-span-2 font-mono text-[#414943]"></dd>
+                <dt class="mt-1 font-mono text-[#5F6B63]">Status</dt>
+                <dd data-f="status"
+                    class="col-span-2 mt-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-[#18221C]">
                 </dd>
             </dl>
 
@@ -699,24 +724,24 @@
                 @method('PATCH')
 
                 <button type="submit" name="status" value="tersedia" data-opt="tersedia"
-                    class="w-full text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-green-600 hover:bg-[#F6FBF5] transition-colors group">
-                    <span class="block text-sm font-bold text-[#093A25]">Tersedia</span>
-                    <span class="block text-xs text-gray-500 mt-0.5">Tampil aktif di Jelajahi Limbah.</span>
+                    class="group w-full rounded-xl border border-[#E1E8E1] px-4 py-3 text-left transition-colors hover:border-[#23533D] hover:bg-[#F1F8F1]">
+                    <span class="block text-sm font-semibold text-[#093A25]">Tersedia</span>
+                    <span class="mt-0.5 block text-xs text-[#5F6B63]">Tampil aktif di Jelajahi Limbah.</span>
                 </button>
                 <button type="submit" name="status" value="sedang diproses" data-opt="sedang diproses"
-                    class="w-full text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-orange-400 hover:bg-[#FDECE8] transition-colors">
-                    <span class="block text-sm font-bold text-[#C4411E]">Sedang Diproses</span>
-                    <span class="block text-xs text-gray-500 mt-0.5">Recycler sudah menghubungi Anda dan menunggu
+                    class="w-full rounded-xl border border-[#E1E8E1] px-4 py-3 text-left transition-colors hover:border-[#C4411E] hover:bg-[#FFF3EF]">
+                    <span class="block text-sm font-semibold text-[#C4411E]">Sedang Diproses</span>
+                    <span class="mt-0.5 block text-xs text-[#5F6B63]">Recycler sudah menghubungi Anda dan menunggu
                         pick-up.</span>
                 </button>
                 <button type="submit" name="status" value="sudah diambil" data-opt="sudah diambil"
-                    class="w-full text-left px-4 py-3 rounded-xl border border-gray-200 hover:border-gray-500 hover:bg-gray-50 transition-colors">
-                    <span class="block text-sm font-bold text-[#414943]">Sudah Diambil</span>
-                    <span class="block text-xs text-gray-500 mt-0.5">Armada selesai memuat. Status ini final.</span>
+                    class="w-full rounded-xl border border-[#E1E8E1] px-4 py-3 text-left transition-colors hover:border-[#5F6B63] hover:bg-[#F1F5F1]">
+                    <span class="block text-sm font-semibold text-[#414943]">Sudah Diambil</span>
+                    <span class="mt-0.5 block text-xs text-[#5F6B63]">Armada selesai memuat. Status ini final.</span>
                 </button>
             </form>
 
-            <p id="dlg-final-note" class="hidden mt-6 text-xs text-[#414943] bg-[#EBEFEA] rounded-lg p-3 font-medium">
+            <p id="dlg-final-note" class="mt-6 hidden rounded-lg bg-[#E9EEE8] p-3 text-xs font-medium text-[#414943]">
                 Batch ini sudah selesai diambil oleh mitra pendaur ulang, sehingga statusnya tidak dapat diubah lagi.
             </p>
         </div>

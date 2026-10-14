@@ -1,7 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-[#F6FBF5] min-h-screen pb-24 pt-8">
+    {{-- Font: Inter (teks) + IBM Plex Mono (label teknis), sama dengan halaman Edit Limbah --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .sirkula-font,
+        .sirkula-font input,
+        .sirkula-font select,
+        .sirkula-font textarea,
+        .sirkula-font button {
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+        }
+        .sirkula-font h1,
+        .sirkula-font h2,
+        .sirkula-font h3 { letter-spacing: -0.02em; }
+        .sirkula-font .font-mono {
+            font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+            letter-spacing: 0;
+        }
+    </style>
+
+    <div class="sirkula-font bg-[#F6FBF5] min-h-screen pb-24 pt-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- ========================================== --}}
@@ -9,15 +30,15 @@
             {{-- ========================================== --}}
             <div class="mb-10">
                 <div
-                    class="flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-widest text-gray-400 mb-3">
+                    class="flex items-center gap-2 text-[10px] font-mono font-medium uppercase tracking-widest text-gray-400 mb-3">
                     <a href="{{ route('home') }}" class="hover:text-[#093A25] transition-colors">Beranda</a>
                     <span>/</span>
                     <span class="text-[#093A25]">Permintaan Limbah</span>
                 </div>
-                <h1 class="text-3xl md:text-[34px] font-extrabold text-[#093A25] tracking-tight mb-3">
+                <h1 class="text-3xl md:text-[34px] font-medium text-[#093A25] tracking-tight mb-3">
                     Permintaan Material dari Pengguna Lain
                 </h1>
-                <p class="text-sm text-[#414943] max-w-3xl">
+                <p class="text-[15px] text-[#414943] max-w-3xl">
                     Berikut adalah daftar permintaan material daur ulang dari recycler, peternak, dan industri sirkular.
                     Hubungi narahubung secara mandiri lewat WhatsApp.
                 </p>
@@ -38,14 +59,14 @@
                     </svg>
                     <input type="text" name="search" value="{{ request('search') }}"
                         placeholder="Cari permintaan material..."
-                        class="w-full bg-[#F6FBF5] border-none rounded-xl py-3 pl-11 pr-4 text-sm text-[#414943] focus:ring-2 focus:ring-[#093A25] outline-none transition-all">
+                        class="w-full bg-[#F6FBF5] border-none rounded-xl py-3 pl-11 pr-4 text-[15px] text-[#414943] focus:ring-2 focus:ring-[#093A25] outline-none transition-all">
                 </div>
 
                 <!-- Filter Kategori -->
                 <!-- Filter Kategori (Disesuaikan dengan 3 Kategori Database) -->
                 <div class="w-full md:w-56 shrink-0 relative">
                     <select name="kategori" onchange="this.form.submit()"
-                        class="w-full bg-[#F6FBF5] border-none rounded-xl py-3 px-4 text-sm text-[#414943] font-medium appearance-none cursor-pointer focus:ring-2 focus:ring-[#093A25] outline-none">
+                        class="w-full bg-[#F6FBF5] border-none rounded-xl py-3 px-4 text-[15px] text-[#414943] font-medium appearance-none cursor-pointer focus:ring-2 focus:ring-[#093A25] outline-none">
                         <option value="">Semua Kategori</option>
                         <option value="Limbah Organik" @selected(request('kategori') == 'Limbah Organik')>Limbah Organik</option>
                         <option value="Limbah Anorganik" @selected(request('kategori') == 'Limbah Anorganik')>Limbah Anorganik</option>
@@ -78,13 +99,13 @@
                         class="bg-white rounded-[1.5rem] p-6 shadow-sm border border-[#EBEFEA] flex flex-col hover:shadow-md transition-shadow">
                         <div class="flex justify-between items-center mb-4">
                             <span
-                                class="inline-block bg-[#F0F5F0] text-[#093A25] px-2.5 py-1 rounded font-mono text-[9px] font-bold uppercase tracking-widest border border-[#EBEFEA]">
+                                class="inline-block bg-[#F0F5F0] text-[#093A25] px-2.5 py-1 rounded font-mono text-[9px] font-medium uppercase tracking-widest border border-[#EBEFEA]">
                                 {{ $item->kategori }}
                             </span>
                             <span class="text-xs text-gray-400">{{ $item->created_at->diffForHumans() }}</span>
                         </div>
 
-                        <h3 class="text-lg font-bold text-[#093A25] mb-2 leading-snug">{{ $item->nama_material }}</h3>
+                        <h3 class="text-lg font-medium text-[#093A25] mb-2 leading-snug">{{ $item->nama_material }}</h3>
 
                         <p class="text-[11px] font-mono text-gray-500 flex items-center gap-1.5 mb-6">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,7 +119,7 @@
                             <div>
                                 <p class="text-[9px] font-mono uppercase tracking-widest text-gray-400 mb-1">Volume &amp;
                                     Frekuensi</p>
-                                <p class="text-sm font-mono font-bold text-[#093A25]">
+                                <p class="text-sm font-mono font-semibold text-[#093A25]">
                                     {{ number_format($item->volume, 0, ',', '.') }} {{ $item->satuan }} /
                                     {{ $item->frekuensi }}
                                 </p>
@@ -106,19 +127,19 @@
                             <div class="text-right">
                                 <p class="text-[9px] font-mono uppercase tracking-widest text-gray-400 mb-1">Lokasi
                                     Preferensi</p>
-                                <p class="text-xs font-bold text-[#414943]">{{ $item->lokasi }}</p>
+                                <p class="text-xs font-medium text-[#414943]">{{ $item->lokasi }}</p>
                             </div>
                         </div>
 
                         <a href="https://wa.me/{{ $waNumber }}?text={{ $waText }}" target="_blank"
-                            class="w-full bg-[#204E3A] hover:bg-[#1A4B36] text-white font-bold text-sm py-3.5 rounded-xl text-center flex items-center justify-center gap-2 transition-colors mt-auto shadow-sm">
+                            class="w-full bg-[#204E3A] hover:bg-[#1A4B36] text-white font-medium text-[15px] py-3.5 rounded-xl text-center flex items-center justify-center gap-2 transition-colors mt-auto shadow-sm">
                             Hubungi via WhatsApp &rarr;
                         </a>
                     </div>
                 @empty
                     <div class="col-span-full py-16 text-center bg-white rounded-3xl border border-[#EBEFEA] shadow-sm">
                         <div class="text-4xl mb-4 opacity-50">📂</div>
-                        <h3 class="text-lg font-bold text-[#093A25] mb-2">Belum ada permintaan material</h3>
+                        <h3 class="text-lg font-medium text-[#093A25] mb-2">Belum ada permintaan material</h3>
                         <p class="text-sm text-gray-500">Saat ini belum ada pengguna lain yang mempublikasikan kebutuhan
                             material. Silakan cek kembali nanti.</p>
                     </div>
@@ -137,4 +158,4 @@
 
         </div>
     </div>
-@endsection
+@endsection 

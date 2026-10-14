@@ -2,32 +2,43 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     /**
-     * Kolom status sebelumnya enum:
-     *   menunggu, tersedia, ditolak, sedang dijemput, selesai
-     * sementara aplikasi memakai juga "sedang diproses" dan "sudah diambil".
-     * Nilai di luar enum akan ditolak database. Kolom diubah menjadi string
-     * agar semua status yang dipakai aplikasi bisa tersimpan.
+     * Nama kolom di sini HARUS sama dengan yang dipakai controller & view:
+     * mitra_id, judul, estimasi_volume, foto_limbah, tanggal_pencatatan, dst.
      */
     public function up(): void
     {
-        // Di PostgreSQL, enum Laravel = varchar + CHECK constraint; constraint harus dibuang manual.
-        if (DB::getDriverName() === 'pgsql') {
-            DB::statement('ALTER TABLE laporan_limbahs DROP CONSTRAINT IF EXISTS laporan_limbahs_status_check');
-        }
+        Schema::create('laporan_limbahs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('mitra_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('kategori_id')->constrained('kategori_limbahs')->onDelete('cascade');
 
-        Schema::table('laporan_limbahs', function (Blueprint $table) {
-            $table->string('status', 50)->default('menunggu')->change();
+            $table->string('judul');
+            $table->text('deskripsi');
+            $table->decimal('estimasi_volume', 10, 2);
+            $table->string('satuan', 20); // kg, ton, liter, pcs
+            $table->date('tanggal_pencatatan');
+
+            // String (bukan enum) agar semua status aplikasi bisa tersimpan:
+            // menunggu, tersedia, ditolak, sedang diproses, sudah diambil
+            $table->string('status', 50)->default('menunggu');
+
+            $table->string('foto_limbah')->nullable();
+
+            // Koordinat lokasi limbah
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
+
+            $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        // Sengaja kosong: mengembalikan enum akan gagal jika sudah ada data dengan status baru.
+        Schema::dropIfExists('laporan_limbahs');
     }
 };

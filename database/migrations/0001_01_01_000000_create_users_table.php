@@ -11,22 +11,23 @@ return new class extends Migration
         // 1. Tabel Users (Custom untuk Sirkula)
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name'); // Digunakan untuk Nama Bisnis / Fasilitas pada form register baru
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            
+
             // Custom kolom
-            $table->enum('role', ['admin', 'petugas', 'mitra', 'pembeli'])->default('pembeli');
-            $table->string('no_whatsapp')->nullable();
+            $table->enum('role', ['admin', 'petugas', 'mitra', 'pembeli'])->default('mitra');
+            $table->string('no_whatsapp')->nullable(); // Menampung input whatsapp
             $table->string('nama_instansi')->nullable();
-            $table->text('alamat_lengkap')->nullable();
-            $table->string('kelurahan')->nullable(); // Ditambahkan untuk menampung data kelurahan sesuai diskusi
-            $table->string('kode_pos')->nullable(); // Ditambahkan untuk menampung kode pos
+            $table->string('jenis_usaha')->nullable(); // Ditambahkan untuk menampung kategori fasilitas/bisnis
+            $table->text('alamat_lengkap')->nullable(); // Menampung Kota/Lokasi Fasilitas
+            $table->string('kelurahan')->nullable();
+            $table->string('kode_pos')->nullable();
             $table->decimal('latitude', 10, 8)->nullable();
             $table->decimal('longitude', 11, 8)->nullable();
             $table->boolean('is_verified')->default(false);
-            
+
             $table->rememberToken();
             $table->timestamps();
         });
