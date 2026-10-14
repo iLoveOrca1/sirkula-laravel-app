@@ -327,8 +327,7 @@
                     <div class="inline-flex flex-wrap gap-1 rounded-xl bg-[#E9EEE8] p-1">
                         @foreach ($tabs as $key => [$label, $jumlah])
                             @php $aktif = ($statusKey ?? '') === (string) $key; @endphp
-                            <a href="{{ $url(['status' => $key === '' ? null : $key]) }}"
-                                data-no-loader
+                            <a href="{{ $url(['status' => $key === '' ? null : $key]) }}" data-no-loader
                                 class="flex items-center gap-1.5 rounded-lg px-4 py-2 text-[13px] font-medium transition-all duration-200
                                       {{ $aktif ? 'bg-white text-[#093A25] shadow-[0_1px_4px_rgba(9,58,37,0.12)]' : 'text-[#414943] hover:text-[#093A25]' }}">
                                 {{ $label }}
