@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+    {{-- Font sesuai Figma: Plus Jakarta Sans (UI/judul) & IBM Plex Mono (label/angka) --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     @php
         // ------------------------------------------------------------------
         // Data turunan
@@ -63,7 +70,7 @@
                 number_format($lo, 6, '.', '');
             $petaUrl = 'https://www.openstreetmap.org/?mlat=' . $la . '&mlon=' . $lo . '#map=17/' . $la . '/' . $lo;
         }
-        // WhatsApp (nomor milik mitra, dinormalisasi ke format internasional)
+        // WhatsApp
         $wa = preg_replace('/\D+/', '', (string) ($mitra?->no_whatsapp ?? ''));
         if ($wa !== '') {
             if (str_starts_with($wa, '0')) {
@@ -78,7 +85,7 @@
             url()->current();
         $linkWa = $wa !== '' ? 'https://wa.me/' . $wa . '?text=' . rawurlencode($pesanWa) : null;
         $bisaHubungi = $linkWa && !$final;
-        // Tombol kembali: pertahankan filter & halaman katalog bila datang dari sana
+        // Tombol kembali
         $prev = url()->previous();
         $kembaliUrl = str_starts_with($prev, route('pasar.index')) ? $prev : route('pasar.index');
         $mailLapor =
@@ -90,7 +97,8 @@
             rawurlencode('Halaman: ' . url()->current() . "\n\nJelaskan ketidakakuratan yang Anda temukan:\n");
     @endphp
 
-    <div class="bg-[#F4F8F3] min-h-screen pb-20 font-sans">
+    <div class="bg-[#F4F8F3] min-h-screen pb-20"
+        style="font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
 
             <!-- ========================================== -->
@@ -148,7 +156,8 @@
                                 </div>
                             @endif
                             <span
-                                class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-lg bg-[#0B2E20]/90 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-white shadow-sm pointer-events-none">
+                                class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-lg bg-[#0B2E20]/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm pointer-events-none"
+                                style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -158,7 +167,8 @@
                                 Foto dari Mitra
                             </span>
                             <span
-                                class="absolute right-3 bottom-3 rounded-md bg-[#0B2E20]/85 px-2.5 py-1 font-mono text-[10px] font-semibold tracking-wide text-white pointer-events-none">
+                                class="absolute right-3 bottom-3 rounded-md bg-[#0B2E20]/85 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-white pointer-events-none"
+                                style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">
                                 Batch #{{ $kode }}
                             </span>
                         </div>
@@ -169,8 +179,10 @@
                         <div class="flex items-start justify-between gap-4 mb-4">
                             <h2 class="text-xl font-bold tracking-tight text-[#093A25]">Tentang Limbah Ini</h2>
                             <span
-                                class="shrink-0 rounded-md bg-[#EBEFEA] px-2.5 py-1 font-mono text-[10px] font-semibold tracking-wide text-gray-600">KODE:
-                                {{ $kode }}</span>
+                                class="shrink-0 rounded-md bg-[#EBEFEA] px-2.5 py-1 text-[10px] font-semibold tracking-wide text-gray-600"
+                                style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">
+                                KODE: {{ $kode }}
+                            </span>
                         </div>
                         <p class="text-sm md:text-[15px] font-normal text-[#414943] leading-relaxed whitespace-pre-line">
                             {{ $limbah->deskripsi }}</p>
@@ -189,31 +201,32 @@
                         </h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="rounded-2xl bg-[#EEF3EE] p-4">
-                                <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Jenis
-                                    Material</p>
+                                <p class="text-[10px] font-medium uppercase tracking-widest text-gray-500"
+                                    style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">Jenis Material</p>
                                 <p class="mt-1.5 text-base font-bold tracking-tight text-gray-900">{{ $katName }}</p>
                                 <p class="mt-0.5 text-xs font-normal text-gray-600 line-clamp-1">{{ $limbah->judul }}</p>
                             </div>
                             <div class="rounded-2xl bg-[#EEF3EE] p-4">
-                                <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">
-                                    Estimasi Volume</p>
+                                <p class="text-[10px] font-medium uppercase tracking-widest text-gray-500"
+                                    style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">Estimasi Volume</p>
                                 <p class="mt-1.5 text-base font-bold tracking-tight text-gray-900">{{ $angka }}
                                     {{ $satuan }}</p>
                                 <p class="mt-0.5 text-xs font-normal text-gray-600">Estimasi dari pencatatan mitra</p>
                             </div>
                             <div class="rounded-2xl bg-[#EEF3EE] p-4">
-                                <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Tanggal
-                                    Pencatatan</p>
+                                <p class="text-[10px] font-medium uppercase tracking-widest text-gray-500"
+                                    style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">Tanggal Pencatatan</p>
                                 <p class="mt-1.5 text-base font-bold tracking-tight text-gray-900">{{ $tglCatat ?? '-' }}
                                 </p>
                                 <p class="mt-0.5 text-xs font-normal text-gray-600">Dipublikasikan di SIRKULA</p>
                             </div>
                             <div class="rounded-2xl bg-[#EEF3EE] p-4">
-                                <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">Status
-                                    Ketersediaan</p>
+                                <p class="text-[10px] font-medium uppercase tracking-widest text-gray-500"
+                                    style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">Status Ketersediaan</p>
                                 <p class="mt-1.5 text-base font-bold tracking-tight text-gray-900">
                                     {{ ucwords($limbah->status) }}</p>
-                                <p class="mt-0.5 text-xs font-normal text-gray-600">Diperbarui {{ $diperbarui ?? '-' }}</p>
+                                <p class="mt-0.5 text-xs font-normal text-gray-600">Diperbarui {{ $diperbarui ?? '-' }}
+                                </p>
                             </div>
                         </div>
                         <div class="mt-4 flex items-center justify-between gap-3 rounded-xl bg-[#EEF3EE] px-4 py-3">
@@ -227,8 +240,10 @@
                                     mitra</span>
                             </p>
                             <span
-                                class="shrink-0 rounded-full bg-[#C6ECCD] px-2.5 py-0.5 font-mono text-[10px] font-bold tracking-wide text-[#093A25]">Pick-up
-                                Langsung</span>
+                                class="shrink-0 rounded-full bg-[#C6ECCD] px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-[#093A25]"
+                                style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">
+                                Pick-up Langsung
+                            </span>
                         </div>
                     </section>
 
@@ -256,16 +271,19 @@
                                     class="w-full h-64 border-0" referrerpolicy="no-referrer"></iframe>
                             </div>
                             <div class="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs">
-                                <span
-                                    class="font-mono text-[11px] font-medium tracking-wide text-gray-500">{{ number_format($la, 5, '.', '') }},
-                                    {{ number_format($lo, 5, '.', '') }}</span>
+                                <span class="text-[11px] font-medium tracking-wide text-gray-500"
+                                    style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">
+                                    {{ number_format($la, 5, '.', '') }}, {{ number_format($lo, 5, '.', '') }}
+                                </span>
                                 <a href="{{ $petaUrl }}" target="_blank" rel="noopener"
-                                    class="font-semibold text-[#093A25] hover:underline tracking-tight">Buka peta lebih
-                                    besar &nearr;</a>
+                                    class="font-semibold text-[#093A25] hover:underline tracking-tight">
+                                    Buka peta lebih besar &nearr;
+                                </a>
                             </div>
                         @else
-                            <p class="rounded-xl bg-[#EEF3EE] px-4 py-3 text-sm font-normal text-gray-600">Titik koordinat
-                                penjemputan belum dicantumkan oleh mitra. Tanyakan lokasi pastinya saat menghubungi mitra.
+                            <p class="rounded-xl bg-[#EEF3EE] px-4 py-3 text-sm font-normal text-gray-600">
+                                Titik koordinat penjemputan belum dicantumkan oleh mitra. Tanyakan lokasi pastinya saat
+                                menghubungi mitra.
                             </p>
                         @endif
                     </section>
@@ -281,9 +299,13 @@
                         <div class="flex flex-wrap items-center justify-between gap-2">
                             <div class="flex flex-wrap items-center gap-2">
                                 <span
-                                    class="rounded-full bg-[#EBEFEA] px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wide text-[#093A25]">{{ $katName }}</span>
+                                    class="rounded-full bg-[#EBEFEA] px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-[#093A25]"
+                                    style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">
+                                    {{ $katName }}
+                                </span>
                                 <span
-                                    class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 font-mono text-[11px] font-bold tracking-wide {{ $statusBg }}">
+                                    class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold tracking-wide {{ $statusBg }}"
+                                    style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">
                                     <span
                                         class="h-1.5 w-1.5 rounded-full {{ $statusDot }}"></span>{{ ucwords($limbah->status) }}
                                 </span>
@@ -301,9 +323,10 @@
 
                         <!-- Judul -->
                         <h1 class="mt-5 text-3xl font-extrabold leading-[1.15] tracking-tight text-[#093A25]">
-                            {{ $limbah->judul }}</h1>
-                        <p
-                            class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] font-medium tracking-wide text-gray-600">
+                            {{ $limbah->judul }}
+                        </h1>
+                        <p class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-medium tracking-wide text-gray-600"
+                            style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">
                             <span class="inline-flex items-center gap-1">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.8"
                                     viewBox="0 0 24 24">
@@ -320,16 +343,22 @@
 
                         <!-- Volume & biaya -->
                         <div class="mt-5 rounded-2xl bg-[#EEF3EE] p-5">
-                            <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">
-                                {{ $final ? 'Volume Siklus' : 'Volume Tersedia' }}</p>
-                            <p class="mt-1 text-2xl font-extrabold tracking-tight text-[#093A25]">{{ $angka }}
-                                {{ $satuan }}</p>
+                            <p class="text-[10px] font-medium uppercase tracking-widest text-gray-500"
+                                style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">
+                                {{ $final ? 'Volume Siklus' : 'Volume Tersedia' }}
+                            </p>
+                            <p class="mt-1 text-2xl font-extrabold tracking-tight text-[#093A25]">
+                                {{ $angka }} {{ $satuan }}
+                            </p>
                             <div class="mt-5">
-                                <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-gray-500">
-                                    Estimasi Biaya / Kompensasi</p>
+                                <p class="text-[10px] font-medium uppercase tracking-widest text-gray-500"
+                                    style="font-family: 'IBM Plex Mono', ui-monospace, monospace;">
+                                    Estimasi Biaya / Kompensasi
+                                </p>
                                 <p class="mt-1 text-base font-bold tracking-tight text-gray-900">Sesuai Kesepakatan</p>
-                                <p class="mt-1 text-xs font-normal italic text-gray-600 leading-snug">(Dinegosiasikan
-                                    langsung antara Anda dan mitra)</p>
+                                <p class="mt-1 text-xs font-normal italic text-gray-600 leading-snug">
+                                    (Dinegosiasikan langsung antara Anda dan mitra)
+                                </p>
                             </div>
                         </div>
 
@@ -348,8 +377,9 @@
                                     <p class="text-xs font-normal text-gray-600">Kode pos {{ $mitra->kode_pos }}</p>
                                 @endif
                                 <a href="#lokasi"
-                                    class="mt-1 inline-block text-xs font-medium text-[#1A6B45] hover:underline tracking-tight">Lihat
-                                    titik penjemputan di peta &darr;</a>
+                                    class="mt-1 inline-block text-xs font-medium text-[#1A6B45] hover:underline tracking-tight">
+                                    Lihat titik penjemputan di peta &darr;
+                                </a>
                             </div>
                         </div>
 
@@ -509,7 +539,6 @@
 
     <script>
         (function() {
-            // Perbesar foto
             const btnFoto = document.getElementById('btn-foto');
             const dlgFoto = document.getElementById('dlg-foto');
             if (btnFoto && dlgFoto) {
@@ -520,7 +549,6 @@
                     dlgFoto.close();
                 });
             }
-            // Bagikan informasi
             const btnShare = document.getElementById('btn-share');
             const label = document.getElementById('share-label');
             if (btnShare) {
