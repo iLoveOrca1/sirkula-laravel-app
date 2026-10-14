@@ -103,35 +103,35 @@
     <!-- GLOBAL LOADING PAGE (Murni Logo Sirkula Ukuran Besar)        -->
     <!-- ============================================================ -->
     <div id="sirkula-loader" class="loader-visible fixed inset-0 z-[99999] flex items-center justify-center bg-[#F6FBF5]/90 backdrop-blur-md select-none">
-        
+
         <!-- Kontainer Logo Ukuran Besar -->
         <div class="sirkula-pure-logo relative w-40 h-40 sm:w-48 sm:h-48">
             <!-- Elemen 1: Hijau Kiri Bawah -->
-            <img 
-                src="{{ asset('storage/images/elemen-1.png') }}" 
+            <img
+                src="{{ asset('storage/images/elemen-1.png') }}"
                 onerror="this.onerror=null; this.src='{{ asset('images/elemen-1.png') }}';"
-                alt="" 
+                alt=""
                 class="pure-el-1 absolute inset-0 w-full h-full object-contain pointer-events-none"
             >
             <!-- Elemen 3: Oranye Kiri Bawah -->
-            <img 
-                src="{{ asset('storage/images/elemen-3.png') }}" 
+            <img
+                src="{{ asset('storage/images/elemen-3.png') }}"
                 onerror="this.onerror=null; this.src='{{ asset('images/elemen-3.png') }}';"
-                alt="" 
+                alt=""
                 class="pure-el-3 absolute inset-0 w-full h-full object-contain pointer-events-none"
             >
             <!-- Elemen 4: Hijau Kanan Atas -->
-            <img 
-                src="{{ asset('storage/images/elemen-4.png') }}" 
+            <img
+                src="{{ asset('storage/images/elemen-4.png') }}"
                 onerror="this.onerror=null; this.src='{{ asset('images/elemen-4.png') }}';"
-                alt="" 
+                alt=""
                 class="pure-el-4 absolute inset-0 w-full h-full object-contain pointer-events-none"
             >
             <!-- Elemen 2: Oranye Kanan Atas -->
-            <img 
-                src="{{ asset('storage/images/elemen-2.png') }}" 
+            <img
+                src="{{ asset('storage/images/elemen-2.png') }}"
                 onerror="this.onerror=null; this.src='{{ asset('images/elemen-2.png') }}';"
-                alt="" 
+                alt=""
                 class="pure-el-2 absolute inset-0 w-full h-full object-contain pointer-events-none"
             >
         </div>
@@ -158,7 +158,7 @@
                 <!-- 1. Logo Desktop & Mobile -->
                 <div class="flex items-center shrink-0">
                     <a href="/" class="flex items-center gap-2.5">
-                        <img src="{{ asset('storage/images/logo-sirkula.png') }}" 
+                        <img src="{{ asset('storage/images/logo-sirkula.png') }}"
                              onerror="this.onerror=null; this.src='{{ asset('images/logo-sirkula.png') }}';"
                              alt="Logo Sirkula" class="h-8 w-auto">
                         <span class="text-xl font-semibold tracking-wide text-primary-500">SIRKULA</span>

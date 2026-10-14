@@ -22,7 +22,7 @@
 {{-- ============================================================
      SECTION 01 — DIAGNOSA MASALAH
 ============================================================ --}}
-<section class="py-20 md:py-28 bg-[#F6FBF5]"
+<section class="py-20 md:py-28 bg-surface"
     style="font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;">
     <div class="max-w-7xl px-6 md:px-8 mx-auto">
 
@@ -143,7 +143,7 @@
 {{-- ============================================================
      SECTION 02 — LANDASAN KERJA
 ============================================================ --}}
-<section class="py-20 md:py-28 bg-[#F0F5F0]"
+<section class="py-20 md:py-28 bg-background"
     style="font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;">
     <div class="max-w-7xl mx-auto px-6 md:px-8">
 
@@ -220,7 +220,7 @@
 {{-- ============================================================
      SECTION 03 — MODEL ALIRAN
 ============================================================ --}}
-<section class="py-20 md:py-28 bg-[#F6FBF5]"
+<section class="py-20 md:py-28 bg-surface"
     style="font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;">
     <div class="max-w-7xl mx-auto px-6 md:px-8">
 
@@ -314,7 +314,7 @@
 {{-- ============================================================
      SECTION 04 — KEMITRAAN & PRAKTIK LAPANGAN
 ============================================================ --}}
-<section class="py-20 md:py-28 bg-[#F0F5F0]"
+<section class="py-20 md:py-28 bg-background"
     style="font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;">
     <div class="max-w-7xl mx-auto px-6 md:px-8">
         <div class="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
@@ -392,7 +392,7 @@
 {{-- ============================================================
      SECTION 05 — KOMITMEN PLATFORM
 ============================================================ --}}
-<section class="py-20 md:py-28 bg-[#F6FBF5]"
+<section class="py-20 md:py-28 bg-surface"
     style="font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;">
     <div class="max-w-7xl mx-auto px-6 md:px-8">
 
@@ -465,7 +465,7 @@
 {{-- ============================================================
      SECTION 06 — PERTANYAAN UMUM + CTA
 ============================================================ --}}
-<section class="py-20 md:py-28 bg-[#F6FBF5] border-t border-[#EBEFEA]"
+<section class="py-20 md:py-28 bg-background"
     style="font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;">
     <div class="max-w-4xl mx-auto px-6 md:px-8" x-data="{ activeAccordion: 1 }">
 
@@ -587,7 +587,7 @@
     </div>
 
     {{-- Bottom CTA Banner --}}
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mb-28 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div
             class="relative overflow-hidden rounded-[2.5rem] bg-[#1A4B36] p-10 md:p-16 shadow-md border border-[#1A4B36]">
             {{-- Dekorasi Lingkaran (Mirip Figma) --}}

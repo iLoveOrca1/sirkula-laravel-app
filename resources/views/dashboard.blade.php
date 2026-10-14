@@ -277,10 +277,10 @@
             <!-- ============================================================ -->
             <!-- 3b. KARTU MENU: PERMINTAAN MATERIAL (layout horizontal)      -->
             <!-- ============================================================ -->
-            <a href="{{ route('permintaan.dashboard') }}"
-                class="group mb-12 flex flex-col gap-5 rounded-xl bg-white p-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-lg sm:flex-row sm:items-center sm:p-6">
+            <div
+                class="mb-12 flex flex-col gap-5 rounded-xl bg-white p-5 shadow-card transition-all sm:flex-row sm:items-center sm:p-6">
                 <div
-                    class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#E9EEE8] text-[#093A25] transition-colors group-hover:bg-[#23533D] group-hover:text-white">
+                    class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#E9EEE8] text-[#093A25] transition-colors">
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
@@ -300,15 +300,15 @@
                     </p>
                 </div>
 
-                <span
-                    class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#E9EEE8] px-4 py-2.5 text-[13px] font-semibold text-[#093A25] transition-colors group-hover:bg-[#23533D] group-hover:text-white">
+                <a href="{{ route('permintaan.dashboard') }}"
+                    class="group inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#E9EEE8] px-4 py-2.5 text-[13px] font-semibold text-[#093A25] transition-colors transition-all hover:-translate-y-0.5 hover:shadow-lg hover:bg-[#23533D] hover:text-white">
                     Lihat Daftar Permintaan
                     <svg class="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none"
                         stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
-                </span>
-            </a>
+                </a>
+            </div>
 
             <!-- ============================================================ -->
             <!-- 4. LIMBAH SAYA (TABEL, SEARCH, FILTER)                       -->
