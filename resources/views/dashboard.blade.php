@@ -328,6 +328,7 @@
                         @foreach ($tabs as $key => [$label, $jumlah])
                             @php $aktif = ($statusKey ?? '') === (string) $key; @endphp
                             <a href="{{ $url(['status' => $key === '' ? null : $key]) }}"
+                                data-no-loader
                                 class="flex items-center gap-1.5 rounded-lg px-4 py-2 text-[13px] font-medium transition-all duration-200
                                       {{ $aktif ? 'bg-white text-[#093A25] shadow-[0_1px_4px_rgba(9,58,37,0.12)]' : 'text-[#414943] hover:text-[#093A25]' }}">
                                 {{ $label }}
@@ -462,15 +463,15 @@
                                             <div class="flex w-max items-center gap-3">
                                                 @if ($item->foto_limbah)
                                                     <img src="{{ asset('storage/' . $item->foto_limbah) }}"
-                                                        alt="Foto"
-                                                        class="h-12 w-12 shrink-0 rounded-lg object-cover">
+                                                        alt="Foto" class="h-12 w-12 shrink-0 rounded-lg object-cover">
                                                 @else
                                                     <div
                                                         class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#E9EEE8] font-mono text-[9px] font-semibold text-[#8A968E]">
                                                         No IMG</div>
                                                 @endif
                                                 <div>
-                                                    <p class="max-w-[200px] text-[14px] font-medium leading-snug text-[#093A25]">
+                                                    <p
+                                                        class="max-w-[200px] text-[14px] font-medium leading-snug text-[#093A25]">
                                                         {{ $item->judul }}</p>
                                                     <p class="mt-1 font-mono text-[10px] tracking-wide text-[#5F6B63]">
                                                         SKU: {{ $sku }}</p>
@@ -499,7 +500,8 @@
                                         <!-- Lokasi -->
                                         <td class="px-4 py-4">
                                             <div class="text-[13px] font-medium text-[#18221C]">Loading Dock Utama</div>
-                                            <div class="mt-0.5 max-w-[150px] truncate font-mono text-[10px] text-[#5F6B63]">
+                                            <div
+                                                class="mt-0.5 max-w-[150px] truncate font-mono text-[10px] text-[#5F6B63]">
                                                 {{ $item->deskripsi ?: 'Akses Truk' }}</div>
                                         </td>
 
