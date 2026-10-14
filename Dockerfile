@@ -1,22 +1,31 @@
 FROM php:8.3-fpm
 
-RUN apt-get install -y php8.3-cli php8.3-fpm php8.3-mysql php8.3-pgsql \
-    php8.3-sqlite3 php8.3-redis php8.3-memcached \
-    php8.3-mbstring php8.3-xml php8.3-curl php8.3-gd \
-    php8.3-zip php8.3-bcmath php8.3-intl php8.3-soap \
-    php8.3-opcache php8.3-readline php8.3-xdebug \
-    php8.3-pgsql
-
-RUN mkdir -p /var/www/sirkula
-WORKDIR /var/www/sirkula
+# Dependensi sistem + library untuk ekstensi
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        git unzip \
+        libpq-dev \
+        libzip-dev \
+        libicu-dev \
+        libxml2-dev \
+        libpng-dev libjpeg-dev libfreetype6-dev \
+        libmemcached-dev zlib1g-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j"$(nproc)" \
+        pdo_pgsql pgsql pdo_mysql mysqli \
+        gd zip bcmath intl soap opcache \
+    && printf "\n\n\n\n\n\n" | pecl install redis memcached \
+    && docker-php-ext-enable redis memcached \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/pear
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/sirkula
 COPY . .
 
+# /var/www/html -> symlink ke public Laravel
 RUN rm -rf /var/www/html \
-    && ln -s /var/www/sirkula/public /var/www/html
+    && ln -s /var/www/sirkula/public /var/www/html \
+    && chown -R www-data:www-data storage bootstrap/cache
 
 EXPOSE 9000
-
 CMD ["php-fpm"]
-
