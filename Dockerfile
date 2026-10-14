@@ -7,19 +7,16 @@ RUN apt-get install -y php8.3-cli php8.3-fpm php8.3-mysql php8.3-pgsql \
     php8.3-opcache php8.3-readline php8.3-xdebug \
     php8.3-pgsql
 
-
-
-WORKDIR /var/www/html
 RUN mkdir -p /var/www/sirkula
+WORKDIR /var/www/sirkula
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-COPY . /var/www/sirkula
+COPY . .
 
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN rm -rf /var/www/html \
+    && ln -s /var/www/sirkula/public /var/www/html
 
 EXPOSE 9000
 
-ENTRYPOINT [ "entrypoint.sh" ]
 CMD ["php-fpm"]
 
