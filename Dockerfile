@@ -1,4 +1,4 @@
-FROM php:8.5-fpm
+FROM php:fpm
 
 # Dependensi sistem + library untuk ekstensi
 RUN apt-get update && apt-get install -y --no-install-recommends \
