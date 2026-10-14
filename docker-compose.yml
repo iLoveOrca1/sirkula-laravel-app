@@ -7,7 +7,7 @@ services:
         container_name: sirkula_laravel
         restart: unless-stopped
 
-        working-dir: /var/www/sirkula
+        working_dir: /var/www/sirkula
 
         volumes:
             - .:/var/www/sirkula
