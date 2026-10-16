@@ -25,7 +25,7 @@
 ### Jalankan docker
 
 ```bash
-sudo docker compose -d
+sudo docker compose up -d
 ```
 
 ### Install dependency laravel
